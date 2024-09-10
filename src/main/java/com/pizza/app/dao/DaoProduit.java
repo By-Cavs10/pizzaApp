@@ -2,7 +2,10 @@ package com.pizza.app.dao;
 
 import com.pizza.app.bo.Produit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.Insert;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +17,9 @@ public class DaoProduit implements IdaoProduit {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final RowMapper<Produit> PRODUIT_ROW_MAPPER = new RowMapper<Produit>() {
 
         public Produit mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -50,6 +56,19 @@ public class DaoProduit implements IdaoProduit {
                     produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId());
             return;
         }
+        String sql = "INSERT INTO produit (nom,description,prix,image) VALUES (:nomProduit,:descriptionProduit," +
+                ":prixProduit, :imageProduit)";
 
+//On renseigne les paramètres attendus dans la requête
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+//        mapSqlParameterSource.addValue("idProduit", produit.getId());
+        mapSqlParameterSource.addValue("nomProduit", produit.getNom());
+        mapSqlParameterSource.addValue("descriptionProduit", produit.getDescription());
+        mapSqlParameterSource.addValue("prixProduit", produit.getPrix());
+        mapSqlParameterSource.addValue("imageProduit", produit.getImage());
+
+        //Insérer en base un produit
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
+
 }
