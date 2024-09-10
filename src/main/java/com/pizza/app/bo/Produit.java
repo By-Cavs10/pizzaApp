@@ -8,8 +8,15 @@ public class Produit {
         private Double prix;
         private String image;
 
+    public Produit(Long id, String nom, String description, Double prix, String image) {
+        this.id = id;
+        this.nom = nom;
+        this.description = description;
+        this.prix = prix;
+        this.image = image;
+    }
 
-        public Produit() {}
+    public Produit() {}
 
     public Produit(Long id, String nom, String image, String description, Double prix) {
         this.id = id;

@@ -24,14 +24,14 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 
-//	//Spring validation
-//	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//
-//	// Driver de MySQL
-////	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
-//
-//	//JDBC
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	//Spring validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Driver de MySQL
+	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
+	//JDBC
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 }
 
 tasks.named('test') {
