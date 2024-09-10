@@ -19,4 +19,14 @@ public class ProduitManager {
 
         return produits;
     }
+    public  Produit getById(long id) {
+
+        Produit produit = daoProduit.selectProduitById(id);
+
+        return produit;
+
+    }
+    public void saveProduit(Produit produit) {
+        daoProduit.saveProduit(produit);
+    }
 }
