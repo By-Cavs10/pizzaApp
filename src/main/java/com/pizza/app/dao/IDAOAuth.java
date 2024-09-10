@@ -2,6 +2,8 @@ package com.pizza.app.dao;
 
 import com.pizza.app.bo.Utilisateur;
 
+import java.util.List;
+
 public interface IDAOAuth {
 
     /**
@@ -11,4 +13,14 @@ public interface IDAOAuth {
      * @return
      */
     Utilisateur login(String email, String password);
+
+    List<Utilisateur> selectUtilisateur();
+
+    Utilisateur selectUtilisateurById(Long id);
+
+
+
+    void saveUtilisateur(Utilisateur utilisateur);
+
+    void deleteById(Utilisateur utilisateur);
 }

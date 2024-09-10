@@ -4,6 +4,8 @@ package com.pizza.app.ihm;
 import com.pizza.app.bdd.AuthManager;
 import com.pizza.app.bdd.AuthManagerResponse;
 import com.pizza.app.bo.Utilisateur;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,20 +18,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AuthController {
 
+    @Autowired
     private AuthManager authManager;
 
     @GetMapping("login")
     public String login(Model model, RedirectAttributes redirectAttributes) {
 
-        // Tester si deja connecté (le user "loggedUser" en session n'est pas null) retourner page d'erreur
-        Utilisateur loggedUser = (Utilisateur) model.getAttribute("loggedUser");
 
-        if (loggedUser != null){
-            // Ajouter un message temporaire (flash message)
-           IHMHelpers.sendCommonFlashMessage(redirectAttributes, AuthFlashMessage.TYPE_FLASH_ERROR,"Erreur vous êtes déjà connecte(é)");
-
-            return "redirect:/";
-        }
 
         // Instancier un User vide (email et password vide)
            Utilisateur user = new Utilisateur();
@@ -41,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String processLogin(@Valid @ModelAttribute(name = "user") Utilisateur user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok

@@ -1,7 +1,6 @@
 package com.pizza.app.dao;
 
 import com.pizza.app.bo.Utilisateur;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,23 +13,20 @@ import java.util.Objects;
 
 @Profile("mysql")
 @Component
-public class DAOAuthMySQL {
+public class DAOAuthMySQL implements IDAOAuth {
 
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public Utilisateur login(String email, String password) {
-        List<Utilisateur> members = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE email = ? AND password = ?", MEMBER_ROW_MAPPER, email, password);
-        return members.isEmpty() ? null : utilisateurs.get(0);
+        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE email = ? AND password = ?", MEMBER_ROW_MAPPER, email, password);
+        return utilisateurs.isEmpty() ? null : utilisateurs.get(0);
     }
 
-    @Override
-    public List<Utilisateur> selectMovie() {
-        return List.of();
-    }
+
 
     @Override
-    public List<Utilisateur> selectMember() {
+    public List<Utilisateur> selectUtilisateur() {
         return List.of();
     }
 
@@ -56,7 +52,7 @@ public class DAOAuthMySQL {
 
 
 
-            return member;
+            return utilisateur;
         }
     };
 
@@ -70,21 +66,23 @@ public class DAOAuthMySQL {
 //    }
 
     @Override
-    public Member selectMemberById(long id) {
-        List<Member> members = jdbcTemplate.query("SELECT * FROM membre WHERE id = ?", MEMBER_ROW_MAPPER, id);
+    public Utilisateur selectUtilisateurById(Long id) {
+        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE id = ?", MEMBER_ROW_MAPPER, id);
 
         //Si on trouve aucun élément on retourne null
         //Retourner le premier élément
-        return members.isEmpty() ? null : members.get(0);
+        return utilisateurs.isEmpty() ? null : utilisateurs.get(0);
     }
 
+
+
     @Override
-    public void saveMember(Member member) {
+    public void saveUtilisateur(Utilisateur utilisateur) {
 
         //Tester si il existe en base, SI OUI => Update SINON => Insert
-        if (Objects.nonNull(member.getId()) && selectMemberById(member.getId()) != null) {
-            jdbcTemplate.update("UPDATE member SET email = ?, lastname = ?, firstname = ?, password = ? WHERE email = ?"
-                    , member.email, member.lastname, member.firstname, member.password);
+        if (Objects.nonNull(utilisateur.getId()) && selectUtilisateurById(utilisateur.getId()) != null) {
+            jdbcTemplate.update("UPDATE utilisateur SET id= ?, email = ?, password = ?"
+               ,utilisateur.getId(),utilisateur.getEmail(), utilisateur.getPassword());
 
 
 
@@ -95,15 +93,16 @@ public class DAOAuthMySQL {
 
         //Insérer en base un aliment
 
-        jdbcTemplate.update("UPDATE member SET email, lastname , firstname , password) VALUES (?,?," +
-                "?,?)", member.email, member.lastname, member.firstname, member.password);
+        jdbcTemplate.update("UPDATE utilisateur SET id= ?, email = ?, password = ?"
+                ,utilisateur.getId(),utilisateur.getEmail(), utilisateur.getPassword());
 
-        jdbcTemplate.update("UPDATE roles SET ROLE) VALUES (?,?)", member.isAdmin);
+
+
 
     }
 
     @Override
-    public void deleteById(Member member) {
+    public void deleteById(Utilisateur utilisateur) {
 
     }
 
