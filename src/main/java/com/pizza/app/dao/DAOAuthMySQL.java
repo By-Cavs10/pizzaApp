@@ -1,6 +1,7 @@
 package com.pizza.app.dao;
 
 import com.pizza.app.bo.Utilisateur;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,11 +16,12 @@ import java.util.Objects;
 @Component
 public class DAOAuthMySQL implements IDAOAuth {
 
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public Utilisateur login(String email, String password) {
-        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE email = ? AND password = ?", MEMBER_ROW_MAPPER, email, password);
+        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE email = ?", MEMBER_ROW_MAPPER, email);
         return utilisateurs.isEmpty() ? null : utilisateurs.get(0);
     }
 
