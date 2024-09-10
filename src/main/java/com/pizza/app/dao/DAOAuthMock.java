@@ -25,4 +25,24 @@ public class DAOAuthMock implements IDAOAuth {
 
         return foundUtilisateur;
     }
+
+    @Override
+    public List<Utilisateur> selectUtilisateur() {
+        return List.of();
+    }
+
+    @Override
+    public Utilisateur selectUtilisateurById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void saveUtilisateur(Utilisateur utilisateur) {
+
+    }
+
+    @Override
+    public void deleteById(Utilisateur utilisateur) {
+
+    }
 }
