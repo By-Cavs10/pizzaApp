@@ -2,6 +2,7 @@ package com.pizza.app.dao;
 
 import com.pizza.app.bo.Commande;
 import com.pizza.app.bo.EtatCommande;
+import com.pizza.app.bo.TypeProduit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -47,7 +48,10 @@ public class DAOBasketMySQL implements IDAOBasket {
             commande.setLivraison(rs.getString("livraison"));
             commande.setPrixTotal(rs.getDouble("prix_total"));
             commande.setMontantPaye(rs.getDouble("montant_paye"));
-
+            EtatCommande etatCommande = new EtatCommande();
+            etatCommande.setId(rs.getLong("id_etat"));
+            etatCommande.setLibelle(rs.getString("libelle"));
+            commande.setEtatCommande(etatCommande);
 
 
             return commande;
@@ -57,7 +61,7 @@ public class DAOBasketMySQL implements IDAOBasket {
     @Override
     public List<Commande> selectCommande() {
 
-        return jdbcTemplate.query("SELECT * FROM commande", COMMANDE_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM commande INNER JOIN etat ON COMMANDE.ETAT_id_etat = etat.id_etat", COMMANDE_ROW_MAPPER);
 
     }
 
@@ -77,14 +81,14 @@ public class DAOBasketMySQL implements IDAOBasket {
 
     @Override
     public List<EtatCommande> findAll() {
-        String sql = "select id_etat, libelle from etat";
+        String sql = "select id_etat as id, libelle from etat";
 
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EtatCommande.class));
     }
 
     @Override
     public EtatCommande findById(Long id) {
-        String sql = "select id_etat, libelle from etat WHERE id_etat = :idetat";
+        String sql = "select id_etat as id, libelle from etat WHERE id_etat = :idetat";
 
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("idetat", id);
