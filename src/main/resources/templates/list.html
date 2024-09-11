@@ -6,16 +6,19 @@
 
 <title layout:fragment="title">List</title>
 <div layout:fragment="content">
-    <h1>Liste des Films</h1>
+    <h1>Liste des produits</h1>
+    <a th:href="@{/create-produit}"><button class="styled" type="button">Ajouter un produit </button></a>
 
     <div th:each="produit : ${produits}" class="uk-padding-small">
-        <div  th:style="'background-image: url(' + @{${produit.image}} + ');'">
-            <div >
-                <h1 th:text="${produit.nom}"></h1>
+        <div th:style="'background-image: url(' + @{${produit.image}} + ');'">
+            <div>
+
+                    <h1 th:text="${produit.nom}"></h1>
                 <span th:text="${produit.description}"></span>
                 <span th:text="${'prix:'+produit.prix+'€'}"></span>
-                <div>
-
-
+            </div>
+            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button class="styled" type="button">Modifier </button></a>
+        </div>
+    </div>
 </div>
 </html>

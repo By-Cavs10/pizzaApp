@@ -7,6 +7,20 @@ public class Produit {
         private String description;
         private Double prix;
         private String image;
+    private TypeProduit typeProduit;
+
+
+
+    public Produit(Long id, String nom, String description, Double prix, String image, TypeProduit typeProduit) {
+        this.id = id;
+        this.nom = nom;
+        this.description = description;
+        this.prix = prix;
+        this.image = image;
+        this.typeProduit = typeProduit;
+    }
+
+
 
     public Produit(Long id, String nom, String description, Double prix, String image) {
         this.id = id;
@@ -66,6 +80,10 @@ public class Produit {
         this.image = image;
     }
 
+    public TypeProduit getTypeProduit() {return typeProduit;}
+
+    public void setTypeProduit(TypeProduit typeProduit) {this.typeProduit = typeProduit;}
+
     @Override
     public String toString() {
         return "Produit{" +
@@ -74,6 +92,7 @@ public class Produit {
                 ", description='" + description + '\'' +
                 ", prix=" + prix +
                 ", image='" + image + '\'' +
+                ", typeProduit=" + typeProduit +
                 '}';
     }
 }

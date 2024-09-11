@@ -29,6 +29,7 @@ public class DaoProduit implements IdaoProduit {
             produit.setDescription(rs.getString("description"));
             produit.setPrix(rs.getDouble("prix"));  // Utilisation du setter pour attribuer la valeur
             produit.setImage(rs.getString("image"));
+
             return produit;
         }
     };
@@ -56,8 +57,8 @@ public class DaoProduit implements IdaoProduit {
                     produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId());
             return;
         }
-        String sql = "INSERT INTO produit (nom,description,prix,image) VALUES (:nomProduit,:descriptionProduit," +
-                ":prixProduit, :imageProduit)";
+        String sql = "INSERT INTO produit (nom,description,prix,image,id_type_produit) VALUES (:nomProduit,:descriptionProduit," +
+                ":prixProduit, :imageProduit,:idTypeProduit)";
 
 //On renseigne les paramètres attendus dans la requête
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -66,6 +67,8 @@ public class DaoProduit implements IdaoProduit {
         mapSqlParameterSource.addValue("descriptionProduit", produit.getDescription());
         mapSqlParameterSource.addValue("prixProduit", produit.getPrix());
         mapSqlParameterSource.addValue("imageProduit", produit.getImage());
+        mapSqlParameterSource.addValue("idTypeProduit",produit.getTypeProduit().getId()) ;
+
 
         //Insérer en base un produit
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);

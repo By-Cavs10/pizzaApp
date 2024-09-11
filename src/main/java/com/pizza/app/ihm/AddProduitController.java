@@ -1,7 +1,10 @@
 package com.pizza.app.ihm;
 
+import com.pizza.app.bdd.ITypeManager;
 import com.pizza.app.bdd.ProduitManager;
+import com.pizza.app.bdd.TypeManager;
 import com.pizza.app.bo.Produit;
+import com.pizza.app.bo.TypeProduit;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ public class AddProduitController {
 
     @Autowired
     ProduitManager produitManager;
+    @Autowired
+    ITypeManager typeManager;
 
 
     public AddProduitController(ProduitManager produitManager) {
@@ -34,6 +39,9 @@ public class AddProduitController {
             produit = produitManager.getById(id);
         }
         model.addAttribute("produit", produit);
+
+        List<TypeProduit> types = typeManager.getTypes();
+        model.addAttribute("types", types);
 
 
         return "create-produit";

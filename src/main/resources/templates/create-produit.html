@@ -10,7 +10,7 @@
     <body>
     <div class="uk-container">
 
-        <h1>Ajouter un produit</h1>
+        <h1>Ajouter ou Modifier un produit</h1>
 
         <form th:object="${produit}" method="post" th:action="@{/create-produit}">
             <!--id-->
@@ -25,7 +25,13 @@
                     </ul>
                 </div>
             </div>
+<!--            Champ Type de produit-->
+            <label class="uk-form-label" for="typeproduit">Type de Produit</label>
+            <select th:field="*{typeProduit}">
 
+                <option th:each="cat :${typess}" th:value="${cat.id}" th:text="${cat.libelle}"></option>
+
+            </select>
             <!-- Champ description -->
             <div class="uk-margin">
                 <label class="uk-form-label" for="description">Description</label>
