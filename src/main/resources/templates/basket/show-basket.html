@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+
+<body class="eni-page-background">
+<title layout:fragment="title">Panier</title>
+<div layout:fragment="content">
+
+
+
+  <h1>panier</h1>
+
+  <li th:each="commande : ${commandes}" th:text="${commande}"></li>
+
+</div>
+</body>
+</html>

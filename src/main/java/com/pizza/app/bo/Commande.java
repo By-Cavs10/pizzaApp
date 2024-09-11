@@ -25,6 +25,17 @@ public class Commande {
         this.montantPaye = montantPaye;
     }
 
+    public Commande(Long id, String date, String heure, String livraison, Double prixTotal, Double montantPaye, List<DetailCommande> detailCommandes, EtatCommande etatCommande) {
+        this.id = id;
+        this.date = date;
+        this.heure = heure;
+        this.livraison = livraison;
+        this.prixTotal = prixTotal;
+        this.montantPaye = montantPaye;
+        this.detailCommandes = detailCommandes;
+        this.etatCommande = etatCommande;
+    }
+
     public Long getId() {
         return id;
     }
@@ -101,5 +112,7 @@ public class Commande {
                 ", detailCommandes=" + detailCommandes +
                 ", etatCommande=" + etatCommande +
                 '}';
+
+
     }
 }
