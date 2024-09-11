@@ -21,14 +21,14 @@ public class DaoType implements IdaoType{
         @Override
         public List<TypeProduit> findAll() {
 
-            String sql = "select id_type_produit,libelle from type_Produit";
+            String sql = "select id_type_produit as id,libelle from type_Produit";
 
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<TypeProduit>(TypeProduit.class));
         }
 
         @Override
         public TypeProduit findById(Long id) {
-            String sql = "select id_type_produit,libelle from type_Produit where id_type_produit= :idTypeProduit";
+            String sql = "select id_type_produit as id,libelle from type_Produit where id_type_produit= :idTypeProduit";
 
             MapSqlParameterSource map = new MapSqlParameterSource();
 

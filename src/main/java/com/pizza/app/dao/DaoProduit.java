@@ -1,6 +1,7 @@
 package com.pizza.app.dao;
 
 import com.pizza.app.bo.Produit;
+import com.pizza.app.bo.TypeProduit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.Insert;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,6 +30,10 @@ public class DaoProduit implements IdaoProduit {
             produit.setDescription(rs.getString("description"));
             produit.setPrix(rs.getDouble("prix"));  // Utilisation du setter pour attribuer la valeur
             produit.setImage(rs.getString("image"));
+            TypeProduit typeProduit = new TypeProduit();
+            typeProduit.setId(rs.getLong("id_type_produit"));
+            typeProduit.setLibelle(rs.getString("libelle"));
+            produit.setTypeProduit(typeProduit);
 
             return produit;
         }
@@ -37,7 +42,7 @@ public class DaoProduit implements IdaoProduit {
     @Override
     public List<Produit> selectProduit() {
 
-        return jdbcTemplate.query("SELECT * FROM produit", PRODUIT_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM produit INNER JOIN type_produit ON PRODUIT.id_type_produit = type_produit.id_type_produit", PRODUIT_ROW_MAPPER);
 
     }
 
@@ -53,8 +58,8 @@ public class DaoProduit implements IdaoProduit {
     @Override
     public void saveProduit(Produit produit) {
         if (produit.getId() != null && selectProduitById(produit.getId()) != null) {
-            jdbcTemplate.update("UPDATE produit SET nom = ?, description = ?, prix = ?, image = ? WHERE id =?",
-                    produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId());
+            jdbcTemplate.update("UPDATE produit SET nom = ?, description = ?, prix = ?, image = ? ,id_type_produit WHERE id =?",
+                    produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId(),produit.getTypeProduit().getId());
             return;
         }
         String sql = "INSERT INTO produit (nom,description,prix,image,id_type_produit) VALUES (:nomProduit,:descriptionProduit," +

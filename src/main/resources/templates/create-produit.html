@@ -29,7 +29,7 @@
             <label class="uk-form-label" for="typeproduit">Type de Produit</label>
             <select th:field="*{typeProduit}">
 
-                <option th:each="cat :${typess}" th:value="${cat.id}" th:text="${cat.libelle}"></option>
+                <option th:each="cat :${types}" th:value="${cat.id}" th:text="${cat.libelle}"></option>
 
             </select>
             <!-- Champ description -->
