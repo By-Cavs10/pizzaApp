@@ -1,14 +1,14 @@
 package com.pizza.app.bdd;
 
-public class AuthManagerResponse <T> {
+public class AppManagerResponse<T> {
 
     public String code;
     public String message;
     public T data;
 
-    public static <T> AuthManagerResponse<T> performResponse(String code, String message, T data) {
+    public static <T> AppManagerResponse<T> performResponse(String code, String message, T data) {
         // Cas 1 : Succès
-        AuthManagerResponse<T> response = new AuthManagerResponse<T>();
+        AppManagerResponse<T> response = new AppManagerResponse<T>();
         response.code = code;
         response.message = message;
         response.data = data;

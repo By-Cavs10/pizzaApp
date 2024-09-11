@@ -12,16 +12,16 @@ public class AuthManager {
     @Autowired
     IDAOAuth daoAuth;
 
-    public AuthManagerResponse<Utilisateur> authenticate(String email, String password) {
+    public AppManagerResponse<Utilisateur> authenticate(String email, String password) {
         // On essayer de trouver le membre qui à l'email et le password envoyés
         Utilisateur foundUtilisateur = daoAuth.login(email, password);
 
         // Si couple email/mot de passe incorrect erreur code 756
         if (foundUtilisateur == null) {
-            return AuthManagerResponse.performResponse("756", "Couple email/mot de passe incorrect", null);
+            return AppManagerResponse.performResponse("756", "Couple email/mot de passe incorrect", null);
         }
 
         // Sinon code 202
-        return AuthManagerResponse.performResponse("202", "Vous êtes connecté(e) avec succès", foundUtilisateur);
+        return AppManagerResponse.performResponse("202", "Vous êtes connecté(e) avec succès", foundUtilisateur);
     }
 }

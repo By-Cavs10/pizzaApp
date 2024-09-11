@@ -2,7 +2,7 @@ package com.pizza.app.ihm;
 
 
 import com.pizza.app.bdd.AuthManager;
-import com.pizza.app.bdd.AuthManagerResponse;
+import com.pizza.app.bdd.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class AuthController {
         }
 
         // 2 : Contrôle métier (le manager)
-        AuthManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
+        AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
 
         // Erreur code 756 retourner la page avec l'erreur métier
         if (response.code.equals("756")){
