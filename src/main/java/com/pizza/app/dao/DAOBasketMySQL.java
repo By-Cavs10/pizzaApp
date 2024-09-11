@@ -1,10 +1,13 @@
 package com.pizza.app.dao;
 
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.EtatCommande;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +30,10 @@ public class DAOBasketMySQL implements IDAOBasket {
 
     Comment mppaer un résultat SQL en Aliment
      */
+    public DAOBasketMySQL(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     static final RowMapper<Commande> COMMANDE_ROW_MAPPER = new RowMapper<Commande>() {
 
@@ -43,7 +50,6 @@ public class DAOBasketMySQL implements IDAOBasket {
 
 
 
-
             return commande;
         }
     };
@@ -56,7 +62,7 @@ public class DAOBasketMySQL implements IDAOBasket {
     }
 
     @Override
-    public Commande selectCommandeById(long id) {
+    public Commande selectCommandeById(Long id) {
         List<Commande> commandes = jdbcTemplate.query("SELECT * FROM commande WHERE id_commande = ?", COMMANDE_ROW_MAPPER, id);
 
         //Si on trouve aucun élément on retourne null
@@ -67,6 +73,29 @@ public class DAOBasketMySQL implements IDAOBasket {
         //Retourner le premier élément
         return commandes.get(0);
     }
+// Etat commande association avec Commande
+
+    @Override
+    public List<EtatCommande> findAll() {
+        String sql = "select id_etat, libelle from etat";
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EtatCommande.class));
+    }
+
+    @Override
+    public EtatCommande findById(Long id) {
+        String sql = "select id_etat, libelle from etat WHERE id_etat = :idetat";
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("idetat", id);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, map, new BeanPropertyRowMapper<>(EtatCommande.class));
+
+    }
+
+
 
 
 }
+
+

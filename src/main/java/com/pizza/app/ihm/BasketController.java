@@ -2,11 +2,15 @@ package com.pizza.app.ihm;
 
 import com.pizza.app.bdd.AppManagerResponse;
 import com.pizza.app.bdd.BasketManager;
+import com.pizza.app.bdd.BasketManagerImpl;
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.EtatCommande;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -14,18 +18,23 @@ import java.util.List;
 public class BasketController {
 
     @Autowired
-    BasketManager basketManager;
+    BasketManagerImpl basketManager;
 
 
     @GetMapping("panier")
-    public String showBasket(Model model){
+    public String showBasket(@Valid @ModelAttribute("etatCommande") EtatCommande etatCommande, Model model){
 
         //V1 Envoyer la liste d'aliments dans le Modèle
 //        model.addAttribute("aliments", alimentManager.getAliments());
 
-        // V2 On récupère la réponse métier (contrôle métier)
+        // On récupère les data commandes
         AppManagerResponse<List<Commande>> response = basketManager.getCommandes();
         model.addAttribute("commandes", response.data);
+
+        //récupère data Etat commande
+
+        List<EtatCommande> etatCommandes = basketManager.getEtatCommandes();
+        model.addAttribute("etatCommandes",etatCommandes);
 
         //Afficher la page
         // return "v2/aliment-page-v2" ;
