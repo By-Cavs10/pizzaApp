@@ -3,7 +3,6 @@ package com.pizza.app.dao;
 import com.pizza.app.bo.Produit;
 import com.pizza.app.bo.TypeProduit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.sql.Insert;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -53,6 +52,20 @@ public class DaoProduit implements IdaoProduit {
             return null;
         }
         return produits.get(0);
+    }
+    @Override
+    public boolean deleteProduit(Long id) {
+        // Vérifier si l'ID du produit est valide (non nul)
+        if (id != null) {
+            // Supprimer le produit de la base de données
+            String sql = "DELETE FROM produit WHERE id = ?";
+            int deleteproduits = jdbcTemplate.update(sql, id);
+
+            // Retourner true si au moins une ligne a été affectée (produit supprimé)
+            return deleteproduits > 0;
+        }
+        // Retourner false si l'ID est nul ou si aucune ligne n'est affectée
+        return false;
     }
 
     @Override

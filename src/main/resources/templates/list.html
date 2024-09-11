@@ -18,7 +18,8 @@
                 <span th:text="${'prix:'+produit.prix+'€'}"></span>
                 <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>
             </div>
-            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button class="styled" type="button">Modifier </button></a>
+            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button  type="button">Modifier </button></a>
+            <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}"><button  type="button">Supprimer</button></a>
         </div>
     </div>
 </div>

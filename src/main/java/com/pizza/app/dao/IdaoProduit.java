@@ -9,5 +9,7 @@ public interface IdaoProduit {
 
     Produit selectProduitById(long id);
 
+    boolean deleteProduit(Long id);
+
     void saveProduit(Produit produit);
 }
