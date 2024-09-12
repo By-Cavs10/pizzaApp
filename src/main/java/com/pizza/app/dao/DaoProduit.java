@@ -47,11 +47,9 @@ public class DaoProduit implements IdaoProduit {
 
     @Override
     public Produit selectProduitById(long id) {
-        List<Produit> produits = jdbcTemplate.query("SELECT* FROM produit WHERE id = ?", PRODUIT_ROW_MAPPER, id);
-        if (produits.size() == 0) {
-            return null;
-        }
-        return produits.get(0);
+        Produit produit = jdbcTemplate.queryForObject("SELECT * FROM produit INNER JOIN type_produit ON PRODUIT.id_type_produit = type_produit.id_type_produit where id=?", PRODUIT_ROW_MAPPER, id);
+
+        return produit;
     }
     @Override
     public boolean deleteProduit(Long id) {
@@ -71,8 +69,8 @@ public class DaoProduit implements IdaoProduit {
     @Override
     public void saveProduit(Produit produit) {
         if (produit.getId() != null && selectProduitById(produit.getId()) != null) {
-            jdbcTemplate.update("UPDATE produit SET nom = ?, description = ?, prix = ?, image = ? ,id_type_produit WHERE id =?",
-                    produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId(),produit.getTypeProduit().getId());
+            jdbcTemplate.update("UPDATE produit SET nom = ?, description = ?, prix = ?, image = ?  WHERE id =?",
+                    produit.getNom(), produit.getDescription(), produit.getPrix(), produit.getImage(), produit.getId());
             return;
         }
         String sql = "INSERT INTO produit (nom,description,prix,image,id_type_produit) VALUES (:nomProduit,:descriptionProduit," +
