@@ -20,6 +20,26 @@ public class DAOAuthMySQL implements IDAOAuth {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public static final RowMapper<Utilisateur> MEMBER_ROW_MAPPER = new RowMapper<Utilisateur>() {
+
+        @Override
+        public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Utilisateur utilisateur = new Utilisateur() {};
+            utilisateur.setId(rs.getLong("id"));
+            utilisateur.setNom(rs.getString("nom"));
+            utilisateur.setPrenom(rs.getString("prenom"));
+            utilisateur.setEmail(rs.getString("email"));
+            utilisateur.setPassword(rs.getString("password"));
+            utilisateur.setRole(rs.getBoolean("role"));
+
+
+
+
+
+            return utilisateur;
+        }
+    };
+
     @Override
     public Utilisateur login(String email, String password) {
         List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE email = ?", MEMBER_ROW_MAPPER, email);
@@ -38,20 +58,6 @@ public class DAOAuthMySQL implements IDAOAuth {
     Comment mppaer un résultat SQL en Aliment
      */
 
-    public static final RowMapper<Utilisateur> MEMBER_ROW_MAPPER = new RowMapper<Utilisateur>() {
-
-        @Override
-        public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Utilisateur utilisateur = new Utilisateur() {};
-
-            utilisateur.setEmail(rs.getString("email"));
-            utilisateur.setPassword(rs.getString("password"));
-
-
-
-            return utilisateur;
-        }
-    };
 
 
     @Override
