@@ -1,28 +1,12 @@
 package com.pizza.app.bo;
 
-public class Utilisateur {
+public abstract class Utilisateur {
 
     private Long id;
     private String nom;
     private String prenom;
     private String email;
     private String password;
-
-    public Utilisateur() {}
-
-
-    public Utilisateur(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public Utilisateur(Long id, String nom, String prenom, String email, String password) {
-        this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.password = password;
-    }
 
     public Long getId() {
         return id;
@@ -64,6 +48,15 @@ public class Utilisateur {
         this.password = password;
     }
 
+    public Utilisateur() {
+    }
+
+
+    public Utilisateur(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Utilisateur{" +
@@ -74,4 +67,14 @@ public class Utilisateur {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public Utilisateur(Long id, String nom, String prenom, String email, String password) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.password = password;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.pizza.app.dao;
 import com.pizza.app.bo.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -28,12 +29,8 @@ public class DAOAuthMySQL implements IDAOAuth {
 
 
     @Override
-    public List<Utilisateur> selectUtilisateur() {
-        return List.of();
-    }
-
-
-
+    public List<Utilisateur> selectUtilisateur() {return List.of();
+        }
 
     /*
     Le code qui permet de savoir comment convertir/mapper un résultat en SQL en
@@ -41,16 +38,14 @@ public class DAOAuthMySQL implements IDAOAuth {
     Comment mppaer un résultat SQL en Aliment
      */
 
-    static final RowMapper<Utilisateur> MEMBER_ROW_MAPPER = new RowMapper<Utilisateur>() {
+    public static final RowMapper<Utilisateur> MEMBER_ROW_MAPPER = new RowMapper<Utilisateur>() {
 
         @Override
         public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Utilisateur utilisateur = new Utilisateur();
+            Utilisateur utilisateur = new Utilisateur() {};
 
             utilisateur.setEmail(rs.getString("email"));
             utilisateur.setPassword(rs.getString("password"));
-
-
 
 
 
@@ -58,14 +53,6 @@ public class DAOAuthMySQL implements IDAOAuth {
         }
     };
 
-
-
-//    @Override
-//    public List<Member> selectMember() {
-//
-//        return jdbcTemplate.query("SELECT * FROM MEMBRE", MEMBER_ROW_MAPPER);
-//
-//    }
 
     @Override
     public Utilisateur selectUtilisateurById(Long id) {

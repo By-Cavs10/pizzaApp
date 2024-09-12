@@ -12,7 +12,7 @@ public interface IDAOAuth {
      * @param password
      * @return
      */
-    Utilisateur login(String email, String password);
+//    Utilisateur login(String email, String password);
 
     List<Utilisateur> selectUtilisateur();
 
@@ -23,4 +23,6 @@ public interface IDAOAuth {
     void saveUtilisateur(Utilisateur utilisateur);
 
     void deleteById(Utilisateur utilisateur);
+
+    Utilisateur login(String email, String password);
 }

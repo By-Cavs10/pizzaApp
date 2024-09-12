@@ -12,10 +12,11 @@ import java.util.List;
 public class DAOAuthMock implements IDAOAuth {
 
     // Deux faux users
-    List<Utilisateur> utilisateurs = Arrays.asList(
-            new Utilisateur("a@a", "123"),
-            new Utilisateur("thierry@gmail.com", "misericorde")
-    );
+//    List<Utilisateur> utilisateurs = Arrays.asList(
+//            new Utilisateur("a@a", "123"),
+//            new Utilisateur("thierry@gmail.com", "misericorde")
+//    );
+    List<Utilisateur> utilisateurs;
 
     @Override
     public Utilisateur login(String email, String password) {
