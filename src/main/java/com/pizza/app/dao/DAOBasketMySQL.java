@@ -66,14 +66,14 @@ public class DAOBasketMySQL implements IDAOBasket {
             DetailCommande detailCommande = new DetailCommande();
 
             detailCommande.setQuantite(rs.getLong(("quantite")));
-            Produit produit = new Produit();
-            produit.setId(rs.getLong("produit_id_produit"));
-            produit.setNom(rs.getString("produit_nom"));
-            produit.setPrix(rs.getDouble("produit_prix"));
-            produit.setImage(rs.getString("produit_image"));
-            produit.setDescription(rs.getString("produit_description"));
-//            Produit produit = daoProduit.selectProduitById(rs.getLong("produit_id_produit"));
-//            detailCommande.setProduit(produit);
+//            Produit produit = new Produit();
+//            produit.setId(rs.getLong("produit_id_produit"));
+//            produit.setNom(rs.getString("produit_nom"));
+//            produit.setPrix(rs.getDouble("produit_prix"));
+//            produit.setImage(rs.getString("produit_image"));
+//            produit.setDescription(rs.getString("produit_description"));
+            Produit produit = daoProduit.selectProduitById(rs.getLong("produit_id_produit"));
+            detailCommande.setProduit(produit);
 //            TypeProduit typeProduit = new TypeProduit();
 //            typeProduit.setLibelle(rs.getString("type_produit"));
 
