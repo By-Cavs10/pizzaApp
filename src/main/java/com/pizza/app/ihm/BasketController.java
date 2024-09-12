@@ -4,6 +4,7 @@ import com.pizza.app.bdd.AppManagerResponse;
 import com.pizza.app.bdd.BasketManager;
 import com.pizza.app.bdd.BasketManagerImpl;
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.DetailCommande;
 import com.pizza.app.bo.EtatCommande;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ public class BasketController {
 
 
     @GetMapping("panier")
-    public String showBasket(@Valid @ModelAttribute("etatCommande") EtatCommande etatCommande, Model model){
+    public String showBasket(@Valid @ModelAttribute("etatCommande") EtatCommande etatCommande,
+                             @Valid @ModelAttribute("detailCommande") DetailCommande detailCommande,
+    Model model){
 
         //V1 Envoyer la liste d'aliments dans le Modèle
 //        model.addAttribute("aliments", alimentManager.getAliments());
@@ -35,6 +38,12 @@ public class BasketController {
 
         List<EtatCommande> etatCommandes = basketManager.getEtatCommandes();
         model.addAttribute("etatCommandes",etatCommandes);
+
+
+        //récupère data détail commande
+
+        List<DetailCommande> detailCommandes = basketManager.getDetailCommandes();
+        model.addAttribute("detailsCommandes",detailCommandes);
 
         //Afficher la page
         // return "v2/aliment-page-v2" ;

@@ -1,6 +1,7 @@
 package com.pizza.app.dao;
 
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.DetailCommande;
 import com.pizza.app.bo.EtatCommande;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface IDAOBasket {
     List<EtatCommande> findAll();
 
     EtatCommande findById(Long id);
+
+    List<DetailCommande> findAllDetailCommande();
+
+    DetailCommande findByIdDetailCommande(Long id);
 }

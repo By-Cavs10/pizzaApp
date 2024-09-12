@@ -1,6 +1,7 @@
 package com.pizza.app.bdd;
 
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.DetailCommande;
 import com.pizza.app.bo.EtatCommande;
 import com.pizza.app.dao.IDAOBasket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,15 @@ public AppManagerResponse<Commande> getById(Long id) {
     @Override
     public List<EtatCommande> getEtatCommandes() {
         return daoBasket.findAll();
+    }
+
+    @Override
+    public DetailCommande getDetailCommande(Long id) {
+        return daoBasket.findByIdDetailCommande(id);
+    }
+
+    @Override
+    public List<DetailCommande> getDetailCommandes() {
+        return daoBasket.findAllDetailCommande();
     }
 }
