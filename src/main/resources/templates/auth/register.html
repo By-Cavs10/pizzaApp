@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+<link rel="stylesheet" th:href="@{/css/N-theme.css}"/>
+<title layout:fragment="title">Inscription</title>
+<div layout:fragment="content">
+    <div class="container">
+        <h2>Inscription</h2>
+
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <div class="form-group">
+                <label for="nom">Nom:</label>
+                <input type="text" th:field="*{nom}" class="form-control" placeholder="Entrez votre nom" required>
+            </div>
+            <div class="form-group">
+                <label for="prenom">Prénom:</label>
+                <input type="text" th:field="*{prenom}" class="form-control" placeholder="Entrez votre prénom" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" class="form-control" placeholder="Entrez votre email" required>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></p>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" th:field="*{password}" class="form-control" placeholder="Entrez votre mot de passe" required>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></p>
+
+            </div>
+            <div class="form-group">
+                <label for="rue">Rue:</label>
+                <input type="text" th:field="*{rue}" class="form-control" placeholder="Entrez votre rue" required>
+            </div>
+            <div class="form-group">
+                <label for="codePostal">Code Postal:</label>
+                <input type="text" th:field="*{codePostal}" class="form-control" placeholder="Entrez votre code postal" required>
+            </div>
+            <div class="form-group">
+                <label for="ville">Ville:</label>
+                <input type="text" th:field="*{ville}" class="form-control" placeholder="Entrez votre ville" required>
+            </div>
+            <div class="form-group">
+                <label for="employe">Employé:</label>
+                <input type="checkbox" th:field="*{employe}" class="form-check-input">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </div>
+        </form>
+
+
+    </div>
+
+
+
+</div>
+</html>

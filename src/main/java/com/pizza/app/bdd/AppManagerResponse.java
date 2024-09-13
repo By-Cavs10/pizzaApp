@@ -5,6 +5,15 @@ public class AppManagerResponse<T> {
     public String code;
     public String message;
     public T data;
+    public boolean success;
+
+    public AppManagerResponse(Object o, String s, boolean b) {
+
+    }
+
+    public AppManagerResponse() {
+
+    }
 
     public static <T> AppManagerResponse<T> performResponse(String code, String message, T data) {
         // Cas 1 : Succès

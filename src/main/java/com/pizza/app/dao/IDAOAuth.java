@@ -22,6 +22,12 @@ public interface IDAOAuth {
 
     void saveUtilisateur(Utilisateur utilisateur);
 
+    boolean existsByEmail(String email);
+
+    boolean save(Utilisateur user);
+
+    Utilisateur findByEmail(String email);
+
     void deleteById(Utilisateur utilisateur);
 
     Utilisateur login(String email, String password);

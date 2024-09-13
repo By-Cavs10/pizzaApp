@@ -1,16 +1,66 @@
 package com.pizza.app.bo;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
+
 public class Utilisateur {
 
     private Long id;
+
+    @NotEmpty(message = "Le nom est obligatoire")
     private String nom;
+
+    @NotEmpty(message = "Le prénom est obligatoire")
     private String prenom;
+
+    @Email(message = "L'email doit être valide")
+    @NotEmpty(message = "L'email est obligatoire")
     private String email;
+
+    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;
+
+    @NotEmpty(message = "La rue est obligatoire")
     private String rue;
+
+    @NotEmpty(message = "Le code postal est obligatoire")
     private String codePostal;
+
+    @NotEmpty(message = "La ville est obligatoire")
     private String ville;
-    private boolean role;
+    private boolean employe;
+
+    private List<Role> roles;
+
+    public Utilisateur(Long id, boolean employe, String codePostal, String ville, String rue, String password, String email, String prenom, String nom) {
+        this.id = id;
+        this.employe = employe;
+        this.codePostal = codePostal;
+        this.ville = ville;
+        this.rue = rue;
+        this.password = password;
+        this.email = email;
+        this.prenom = prenom;
+        this.nom = nom;
+    }
+
+    public Utilisateur(Long id, String nom, String prenom, String email, String password, String rue, String codePostal, String ville, boolean employe, List<Role> roles) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.password = password;
+        this.rue = rue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+        this.employe = employe;
+        this.roles = roles;
+    }
+
+
 
     public Utilisateur(Long id, String nom, String prenom, String email, String password, String rue, String codePostal, String ville) {
         this.id = id;
@@ -23,17 +73,7 @@ public class Utilisateur {
         this.ville = ville;
     }
 
-    public Utilisateur(Long id, boolean role, String ville, String codePostal, String rue, String password, String email, String prenom, String nom) {
-        this.id = id;
-        this.role = role;
-        this.ville = ville;
-        this.codePostal = codePostal;
-        this.rue = rue;
-        this.password = password;
-        this.email = email;
-        this.prenom = prenom;
-        this.nom = nom;
-    }
+
 
     public Utilisateur(Long id, String nom, String prenom, String email, String password) {
         this.id = id;
@@ -43,12 +83,44 @@ public class Utilisateur {
         this.password = password;
     }
 
-    public boolean isRole() {
-        return role;
+    public String getRue() {
+        return rue;
     }
 
-    public void setRole(boolean role) {
-        this.role = role;
+    public void setRue(String rue) {
+        this.rue = rue;
+    }
+
+    public String getCodePostal() {
+        return codePostal;
+    }
+
+    public void setCodePostal(String codePostal) {
+        this.codePostal = codePostal;
+    }
+
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
+
+    public boolean isEmploye() {
+        return employe;
+    }
+
+    public void setEmploye(boolean employe) {
+        this.employe = employe;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -111,9 +183,8 @@ public class Utilisateur {
                 ", rue='" + rue + '\'' +
                 ", codePostal='" + codePostal + '\'' +
                 ", ville='" + ville + '\'' +
-                ", role=" + role +
+                ", employe=" + employe +
+                ", roles=" + roles +
                 '}';
     }
-
-
 }

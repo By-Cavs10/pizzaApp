@@ -43,6 +43,21 @@ public class DAOAuthMock implements IDAOAuth {
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
+    @Override
+    public boolean save(Utilisateur user) {
+        return false;
+    }
+
+    @Override
+    public Utilisateur findByEmail(String email) {
+        return null;
+    }
+
+    @Override
     public void deleteById(Utilisateur utilisateur) {
 
     }

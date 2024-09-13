@@ -24,4 +24,20 @@ public class AuthManager {
         // Sinon code 202
         return AppManagerResponse.performResponse("202", "Vous êtes connecté(e) avec succès", foundUtilisateur);
     }
+
+
+    public AppManagerResponse<Utilisateur> register(Utilisateur user) {
+        // Vérifier si l'utilisateur existe déjà par email
+        if (daoAuth.existsByEmail(user.getEmail())) {
+            return new AppManagerResponse<>(null, "L'adresse email est déjà utilisée.", false);
+        }
+
+        // Enregistrer l'utilisateur dans la base de données
+        boolean isSaved = daoAuth.save(user);
+        if (isSaved) {
+            return new AppManagerResponse<>(user, "Inscription réussie.", true);
+        } else {
+            return new AppManagerResponse<>(null, "Erreur lors de l'inscription.", false);
+        }
+    }
 }

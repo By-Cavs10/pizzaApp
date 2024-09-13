@@ -3,7 +3,6 @@ package com.pizza.app.dao;
 import com.pizza.app.bo.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,7 @@ public class DAOAuthMySQL implements IDAOAuth {
             utilisateur.setPrenom(rs.getString("prenom"));
             utilisateur.setEmail(rs.getString("email"));
             utilisateur.setPassword(rs.getString("password"));
-            utilisateur.setRole(rs.getBoolean("role"));
+            utilisateur.setEmploye(rs.getBoolean("employe"));
 
 
 
@@ -86,16 +85,59 @@ public class DAOAuthMySQL implements IDAOAuth {
 //
         }
 
-        //Insérer en base un aliment
+    }
+    @Override
+    public boolean existsByEmail(String email) {
+        // Requête SQL pour vérifier si l'email existe déjà
+        String sqlFindUserByEmail = "SELECT * FROM utilisateurs WHERE email = ?";
 
-        jdbcTemplate.update("UPDATE utilisateur SET id= ?, email = ?, password = ?"
-                ,utilisateur.getId(),utilisateur.getEmail(), utilisateur.getPassword());
-
-
-
-
+        try {
+            Utilisateur user = jdbcTemplate.queryForObject(sqlFindUserByEmail, new Object[]{email}, new UtilisateurRowMapper());
+            return user != null;
+        } catch (Exception e) {
+            return false;  // Pas trouvé ou une erreur est survenue
+        }
     }
 
+    @Override
+    public boolean save(Utilisateur user) {
+        // Requête SQL pour insérer un nouvel utilisateur
+        String sqlInsertUser = "INSERT INTO utilisateurs (nom, prenom, email, password, rue, codePostal, ville, employe) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        int rows = jdbcTemplate.update(sqlInsertUser,
+                user.getNom(), user.getPrenom(), user.getEmail(), user.getPassword(),
+                user.getRue(), user.getCodePostal(), user.getVille(), user.isEmploye());
+        return rows > 0;
+    }
+
+    @Override
+    public Utilisateur findByEmail(String email) {
+        // Requête SQL pour trouver un utilisateur par email
+        String sqlFindUserByEmail = "SELECT * FROM utilisateurs WHERE email = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sqlFindUserByEmail, new Object[]{email}, new UtilisateurRowMapper());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static class UtilisateurRowMapper implements RowMapper<Utilisateur> {
+        @Override
+        public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Utilisateur user = new Utilisateur();
+            user.setId(rs.getLong("id"));
+            user.setNom(rs.getString("nom"));
+            user.setPrenom(rs.getString("prenom"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            user.setRue(rs.getString("rue"));
+            user.setCodePostal(rs.getString("codePostal"));
+            user.setVille(rs.getString("ville"));
+            user.setEmploye(rs.getBoolean("employe"));
+            return user;
+        }
+    }
     @Override
     public void deleteById(Utilisateur utilisateur) {
 
