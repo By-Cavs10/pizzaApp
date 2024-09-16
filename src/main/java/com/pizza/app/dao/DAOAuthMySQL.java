@@ -123,8 +123,5 @@ public class DAOAuthMySQL implements IDAOAuth {
 
     }
 
-    @Override
-    public void deleteById(Utilisateur utilisateur) {
 
-    }
 }
