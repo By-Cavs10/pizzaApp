@@ -7,6 +7,8 @@
 <title layout:fragment="title">List</title>
 <div layout:fragment="content">
     <h1>Liste des produits</h1>
+    <p th:if="${success}" th:text="${success}"></p>
+
     <a th:href="@{/create-produit}"><button class="styled" type="button">Ajouter un produit </button></a>
 
     <div th:each="produit : ${produits}" class="uk-padding-small">

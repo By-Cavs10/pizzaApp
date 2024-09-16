@@ -28,7 +28,8 @@ public interface IDAOAuth {
 
     Utilisateur findByEmail(String email);
 
-    void deleteById(Utilisateur utilisateur);
 
     Utilisateur login(String email, String password);
+
+    void deleteById(Long id);
 }

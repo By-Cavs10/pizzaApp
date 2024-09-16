@@ -1,13 +1,11 @@
 package com.pizza.app.ihm;
 
-import com.pizza.app.bdd.ITypeManager;
-import com.pizza.app.bdd.ProduitManager;
-import com.pizza.app.bdd.TypeManager;
+import com.pizza.app.bll.ITypeManager;
+import com.pizza.app.bll.ProduitManager;
 import com.pizza.app.bo.Produit;
 import com.pizza.app.bo.TypeProduit;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

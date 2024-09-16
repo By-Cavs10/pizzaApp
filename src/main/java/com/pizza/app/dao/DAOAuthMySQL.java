@@ -23,19 +23,17 @@ public class DAOAuthMySQL implements IDAOAuth {
 
         @Override
         public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Utilisateur utilisateur = new Utilisateur() {};
-            utilisateur.setId(rs.getLong("id"));
-            utilisateur.setNom(rs.getString("nom"));
-            utilisateur.setPrenom(rs.getString("prenom"));
-            utilisateur.setEmail(rs.getString("email"));
-            utilisateur.setPassword(rs.getString("password"));
-            utilisateur.setEmploye(rs.getBoolean("employe"));
-
-
-
-
-
-            return utilisateur;
+            Utilisateur user = new Utilisateur();
+            user.setId(rs.getLong("id"));
+            user.setNom(rs.getString("nom"));
+            user.setPrenom(rs.getString("prenom"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            user.setRue(rs.getString("rue"));
+            user.setCodePostal(rs.getString("code_postal"));
+            user.setVille(rs.getString("ville"));
+            user.setEmploye(rs.getBoolean("employe"));
+            return user;
         }
     };
 
@@ -46,17 +44,16 @@ public class DAOAuthMySQL implements IDAOAuth {
     }
 
 
-
     @Override
-    public List<Utilisateur> selectUtilisateur() {return List.of();
-        }
+    public List<Utilisateur> selectUtilisateur() {
+        return jdbcTemplate.query("SELECT * FROM utilisateur", MEMBER_ROW_MAPPER);
+    }
 
     /*
     Le code qui permet de savoir comment convertir/mapper un résultat en SQL en
 
-    Comment mppaer un résultat SQL en Aliment
-     */
 
+     */
 
 
     @Override
@@ -69,40 +66,39 @@ public class DAOAuthMySQL implements IDAOAuth {
     }
 
 
-
     @Override
     public void saveUtilisateur(Utilisateur utilisateur) {
 
         //Tester si il existe en base, SI OUI => Update SINON => Insert
         if (Objects.nonNull(utilisateur.getId()) && selectUtilisateurById(utilisateur.getId()) != null) {
             jdbcTemplate.update("UPDATE utilisateur SET id= ?, email = ?, password = ?"
-               ,utilisateur.getId(),utilisateur.getEmail(), utilisateur.getPassword());
-
+                    , utilisateur.getId(), utilisateur.getEmail(), utilisateur.getPassword());
 
 
             //PS : Return = Arreter la fonction
             return;
 //
+        } else {
+            jdbcTemplate.update(
+                    "INSERT INTO utilisateur (nom, prenom, email, password, rue, code_postal, ville, employe) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    utilisateur.getNom(), utilisateur.getPrenom(), utilisateur.getEmail(), utilisateur.getPassword(),
+                    utilisateur.getRue(), utilisateur.getCodePostal(), utilisateur.getVille(), utilisateur.isEmploye()
+            );
         }
 
     }
+
     @Override
     public boolean existsByEmail(String email) {
-        // Requête SQL pour vérifier si l'email existe déjà
-        String sqlFindUserByEmail = "SELECT * FROM utilisateurs WHERE email = ?";
-
-        try {
-            Utilisateur user = jdbcTemplate.queryForObject(sqlFindUserByEmail, new Object[]{email}, new UtilisateurRowMapper());
-            return user != null;
-        } catch (Exception e) {
-            return false;  // Pas trouvé ou une erreur est survenue
-        }
+        String sqlFindUserByEmail = "SELECT COUNT(*) FROM utilisateur WHERE email = ?";
+        Integer count = jdbcTemplate.queryForObject(sqlFindUserByEmail, new Object[]{email}, Integer.class);
+        return count != null && count > 0;
     }
 
     @Override
     public boolean save(Utilisateur user) {
         // Requête SQL pour insérer un nouvel utilisateur
-        String sqlInsertUser = "INSERT INTO utilisateurs (nom, prenom, email, password, rue, codePostal, ville, employe) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlInsertUser = "INSERT INTO utilisateur (nom, prenom, email, password, rue, code_postal, ville, employe) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         int rows = jdbcTemplate.update(sqlInsertUser,
                 user.getNom(), user.getPrenom(), user.getEmail(), user.getPassword(),
@@ -112,35 +108,19 @@ public class DAOAuthMySQL implements IDAOAuth {
 
     @Override
     public Utilisateur findByEmail(String email) {
-        // Requête SQL pour trouver un utilisateur par email
-        String sqlFindUserByEmail = "SELECT * FROM utilisateurs WHERE email = ?";
-
         try {
-            return jdbcTemplate.queryForObject(sqlFindUserByEmail, new Object[]{email}, new UtilisateurRowMapper());
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM utilisateur WHERE email = ?",
+                    new Object[]{email},
+                    MEMBER_ROW_MAPPER
+            );
         } catch (Exception e) {
             return null;
         }
     }
 
-    private static class UtilisateurRowMapper implements RowMapper<Utilisateur> {
-        @Override
-        public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Utilisateur user = new Utilisateur();
-            user.setId(rs.getLong("id"));
-            user.setNom(rs.getString("nom"));
-            user.setPrenom(rs.getString("prenom"));
-            user.setEmail(rs.getString("email"));
-            user.setPassword(rs.getString("password"));
-            user.setRue(rs.getString("rue"));
-            user.setCodePostal(rs.getString("codePostal"));
-            user.setVille(rs.getString("ville"));
-            user.setEmploye(rs.getBoolean("employe"));
-            return user;
-        }
-    }
     @Override
-    public void deleteById(Utilisateur utilisateur) {
-
+    public void deleteById(Long id) {
+        jdbcTemplate.update("DELETE FROM utilisateur WHERE id = ?", id);
     }
-
 }

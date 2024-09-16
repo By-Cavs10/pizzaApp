@@ -1,4 +1,4 @@
-package com.pizza.app.bdd;
+package com.pizza.app.bll;
 
 import com.pizza.app.bo.TypeProduit;
 

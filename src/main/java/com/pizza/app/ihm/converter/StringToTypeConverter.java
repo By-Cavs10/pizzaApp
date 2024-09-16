@@ -1,6 +1,6 @@
 package com.pizza.app.ihm.converter;
 
-import com.pizza.app.bdd.ITypeManager;
+import com.pizza.app.bll.ITypeManager;
 import com.pizza.app.bo.TypeProduit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
