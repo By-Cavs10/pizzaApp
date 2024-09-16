@@ -1,10 +1,9 @@
 package com.pizza.app.ihm;
 
 
-import com.pizza.app.bll.AuthManager;
-import com.pizza.app.bll.AppManagerResponse;
+import com.pizza.app.bdd.AuthManager;
+import com.pizza.app.bdd.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
-import com.pizza.app.dao.DAOAuthMySQL;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,17 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 
 @Controller
 public class AuthController {
-    @Autowired
-    DAOAuthMySQL daoAuth;
+
     @Autowired
     private AuthManager authManager;
 
@@ -44,32 +39,29 @@ public class AuthController {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok
-//        if (bindingResult.hasErrors()) {
-//            // Retourner la page avec les erreurs de validation (le format)
-//            return "auth/login";
-//        }
+        if (bindingResult.hasErrors()) {
+            // Retourner la page avec les erreurs de validation (le format)
+            return "auth/login";
+        }
 
         // 2 : Contrôle métier (le manager)
         AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
 
         // Erreur code 756 retourner la page avec l'erreur métier
-        if (((AppManagerResponse<Utilisateur>) response).getCode().equals("756")) {
+        if (response.code.equals("756")) {
             // TODO : Pendant qu'on retourne la page de connexion (envoyer l'erreur metier)
             return "auth/login";
         }
 
         // 3 : Connecter l'user en session
         // Mettre l'user retrouvé en base dans la session
-        model.addAttribute("loggedUser", ((AppManagerResponse<Utilisateur>) response).getData());
+        model.addAttribute("loggedUser", response.data);
 
         // Ajouter un message temporaire (flash message)
-
-        redirectAttributes.addFlashAttribute("success", "Vous êtes connecté(e) avec succès");
-
-//        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
 
         // rediriger sur ta page d'accueil
-        return "redirect:/list";
+        return "redirect:/";
     }
 
     @GetMapping("register")
@@ -99,9 +91,9 @@ public class AuthController {
 
         // Gérer les erreurs d'inscription
 
-        if (!((AppManagerResponse<Utilisateur>) response).isSuccess()) {
+        if (!response.success) {
 
-            model.addAttribute("error", ((AppManagerResponse<Utilisateur>) response).getMessage());
+            model.addAttribute("error", response.message);
             return "auth/register";
         }
 
@@ -114,41 +106,6 @@ public class AuthController {
 
     @GetMapping("logout")
     public String logout() {
-        return "/";
-    }
-
-
-    @GetMapping("/utilisateurs")
-    public String afficherUtilisateurs(Model model) {
-        List<Utilisateur> utilisateurs = daoAuth.selectUtilisateur();
-        model.addAttribute("utilisateurs", utilisateurs);
-        return "list-utilisateurs";
-    }
-
-    @GetMapping("/utilisateurs/edit/{id}")
-    public String afficherFormulaireModification(@PathVariable Long id, Model model) {
-        Utilisateur utilisateur = daoAuth.selectUtilisateurById(id);
-        model.addAttribute("utilisateur", utilisateur);
-        return "utilisateurs/modifier";
-    }
-
-    @PostMapping("/utilisateurs/edit/{id}")
-    public String modifierUtilisateur(@PathVariable Long id, @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "utilisateurs/modifier";
-        }
-
-        utilisateur.setId(id);
-        daoAuth.saveUtilisateur(utilisateur);
-        return "redirect:/utilisateurs";
-    }
-
-    @GetMapping("/utilisateurs/delete/{id}")
-    public String supprimerUtilisateur(@PathVariable Long id) {
-        daoAuth.deleteById(id);
-        return "redirect:/utilisateurs";
+        return "index";
     }
 }
-
-
-

@@ -22,6 +22,9 @@ public class DAOBasketMySQL implements IDAOBasket {
     private IdaoProduit daoProduit;
 
     @Autowired
+    private IDAOAuth daoAuth;
+
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
@@ -37,7 +40,7 @@ public class DAOBasketMySQL implements IDAOBasket {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    static final RowMapper<Commande> COMMANDE_ROW_MAPPER = new RowMapper<Commande>() {
+    final RowMapper<Commande> COMMANDE_ROW_MAPPER = new RowMapper<Commande>() {
 
         @Override
         public Commande mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -46,9 +49,11 @@ public class DAOBasketMySQL implements IDAOBasket {
             commande.setId(rs.getLong("id_commande"));
             commande.setDate(rs.getString("date"));
             commande.setHeure(rs.getString("heure"));
-            commande.setLivraison(rs.getString("livraison"));
+            commande.setLivraison(rs.getBoolean("livraison"));
             commande.setPrixTotal(rs.getDouble("prix_total"));
             commande.setMontantPaye(rs.getDouble("montant_paye"));
+            Utilisateur utilisateur = daoAuth.selectUtilisateurById(rs.getLong("id_utilisateur"));
+            commande.setUtilisateur(utilisateur);
             EtatCommande etatCommande = new EtatCommande();
             etatCommande.setId(rs.getLong("id_etat"));
             etatCommande.setLibelle(rs.getString("libelle"));
@@ -59,7 +64,7 @@ public class DAOBasketMySQL implements IDAOBasket {
         }
     };
 
-     final RowMapper<DetailCommande> DETAILCOMMANDE_ROW_MAPPER = new RowMapper<DetailCommande>() {
+    final RowMapper<DetailCommande> DETAILCOMMANDE_ROW_MAPPER = new RowMapper<DetailCommande>() {
 
         @Override
         public DetailCommande mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -78,12 +83,10 @@ public class DAOBasketMySQL implements IDAOBasket {
 //            typeProduit.setLibelle(rs.getString("type_produit"));
 
 
-
-
             return detailCommande;
-        };
+        }
 
-        ;
+        ;;
 
     };
 
@@ -105,7 +108,17 @@ public class DAOBasketMySQL implements IDAOBasket {
 
         //Retourner le premier élément
         return commandes.get(0);
-    }
+    };
+
+    public Commande selectCommandeByUserId(Long id) {
+        List<Commande> commandes = jdbcTemplate.query("SELECT * FROM commande WHERE id_utilisateur = ?", COMMANDE_ROW_MAPPER, id);
+
+        if (commandes.size() == 0) {
+            return null;
+        }
+        return commandes.get(0);
+    };
+
 // Etat commande association avec Commande
 
     @Override
@@ -138,13 +151,12 @@ public class DAOBasketMySQL implements IDAOBasket {
                 "tp.id_type_produit AS type_produit_id," +
                 "    tp.libelle AS type_produit " +
                 "FROM " +
-                "    detail_commande dc " +
-                "JOIN " +
-                "    produit p ON dc.produit_id_produit = p.id " +
-                "JOIN " +
+                "    detail_commande dc " + "JOIN " +
+                "    produit p ON dc.produit_id_produit = p.id "
+                + "JOIN " +
                 "    TYPE_PRODUIT tp ON p.id_type_produit = tp.id_type_produit;";
 
-        return jdbcTemplate.query(sql,  DETAILCOMMANDE_ROW_MAPPER);
+        return jdbcTemplate.query(sql, DETAILCOMMANDE_ROW_MAPPER);
     }
 
     @Override
@@ -160,7 +172,7 @@ public class DAOBasketMySQL implements IDAOBasket {
                 "FROM " +
                 "    DETAIL_COMMANDE dc " +
                 "JOIN " +
-                "    PRODUIT p ON dc.PRODUIT_id_produit = p.id " ;
+                "    PRODUIT p ON dc.PRODUIT_id_produit = p.id ";
 
 
         MapSqlParameterSource map = new MapSqlParameterSource();
@@ -170,9 +182,28 @@ public class DAOBasketMySQL implements IDAOBasket {
 
     }
 
+@Override
+public void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison) {
+// Insérer une nouvelle commande dans la table COMMANDE
+    String insertCommandeQuery = "INSERT INTO COMMANDE (date, heure, livraison, prixTotal, montantPaye, UTILISATEUR_id_utilisateur, ETAT_COMMANDE_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    jdbcTemplate.update(insertCommandeQuery,
+            new java.sql.Date(new java.util.Date().getTime()),
+            new java.sql.Time(new java.util.Date().getTime()),
+            livraison, // true pour livraison, false pour récupération sur place
+            produit.getPrix() * quantite,
+            0.0, // Exemple de valeur pour montantPaye
+            utilisateur.getId(),
+            1); // ID de l'état "Panier"
 
+    // Récupérer l'ID de la commande nouvellement insérée
+    Long commandeId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
 
+    // Insérer un détail de commande dans la table DETAIL_COMMANDE
+    String insertDetailCommandeQuery = "INSERT INTO DETAIL_COMMANDE (COMMANDE_id_commande, PRODUIT_id_produit, quantite) VALUES (?, ?, ?)";
+    jdbcTemplate.update(insertDetailCommandeQuery, commandeId, produit.getId(), quantite);
 
+    System.out.println("Produit ajouté avec succès dans la commande.");
+}
 
 
 }

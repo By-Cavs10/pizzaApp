@@ -1,8 +1,6 @@
 package com.pizza.app.bll;
 
-import com.pizza.app.bo.Commande;
-import com.pizza.app.bo.DetailCommande;
-import com.pizza.app.bo.EtatCommande;
+import com.pizza.app.bo.*;
 
 import java.util.List;
 
@@ -21,4 +19,5 @@ public interface BasketManagerImpl {
 
     List<DetailCommande> getDetailCommandes();
 
+    void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
 }
