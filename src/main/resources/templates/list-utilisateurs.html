@@ -7,5 +7,44 @@
 <title layout:fragment="title">Liste des Utilisateurs</title>
 <div layout:fragment="content">
 
+
+
+
+    <h1>Liste des Utilisateurs</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Rue</th>
+            <th>Code Postal</th>
+            <th>Ville</th>
+            <th>Employé</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="utilisateur : ${utilisateurs}">
+            <td th:text="${utilisateur.id}"></td>
+            <td th:text="${utilisateur.nom}"></td>
+            <td th:text="${utilisateur.prenom}"></td>
+            <td th:text="${utilisateur.email}"></td>
+            <td th:text="${utilisateur.rue}"></td>
+            <td th:text="${utilisateur.codePostal}"></td>
+            <td th:text="${utilisateur.ville}"></td>
+            <td th:text="${utilisateur.employe ? 'Oui' : 'Non'}"></td>
+            <td>
+                <a th:href="@{'/utilisateurs/edit/' + ${utilisateur.id}}">Modifier</a> |
+                <a th:href="@{'/utilisateurs/delete/' + ${utilisateur.id}}"
+                   onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </div>
 </html>

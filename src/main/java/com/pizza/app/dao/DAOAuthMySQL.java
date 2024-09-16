@@ -24,7 +24,7 @@ public class DAOAuthMySQL implements IDAOAuth {
         @Override
         public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
             Utilisateur user = new Utilisateur();
-            user.setId(rs.getLong("id"));
+            user.setId(rs.getLong("id_utilisateur"));
             user.setNom(rs.getString("nom"));
             user.setPrenom(rs.getString("prenom"));
             user.setEmail(rs.getString("email"));
@@ -49,16 +49,10 @@ public class DAOAuthMySQL implements IDAOAuth {
         return jdbcTemplate.query("SELECT * FROM utilisateur", MEMBER_ROW_MAPPER);
     }
 
-    /*
-    Le code qui permet de savoir comment convertir/mapper un résultat en SQL en
-
-
-     */
-
 
     @Override
     public Utilisateur selectUtilisateurById(Long id) {
-        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE id = ?", MEMBER_ROW_MAPPER, id);
+        List<Utilisateur> utilisateurs = jdbcTemplate.query("SELECT * FROM UTILISATEUR WHERE id_utilisateur = ?", MEMBER_ROW_MAPPER, id);
 
         //Si on trouve aucun élément on retourne null
         //Retourner le premier élément
@@ -71,7 +65,7 @@ public class DAOAuthMySQL implements IDAOAuth {
 
         //Tester si il existe en base, SI OUI => Update SINON => Insert
         if (Objects.nonNull(utilisateur.getId()) && selectUtilisateurById(utilisateur.getId()) != null) {
-            jdbcTemplate.update("UPDATE utilisateur SET id= ?, email = ?, password = ?"
+            jdbcTemplate.update("UPDATE utilisateur SET id_utilisateur= ?, email = ?, password = ?"
                     , utilisateur.getId(), utilisateur.getEmail(), utilisateur.getPassword());
 
 
@@ -121,7 +115,12 @@ public class DAOAuthMySQL implements IDAOAuth {
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM utilisateur WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM utilisateur WHERE id_utilisateur = ?", id);
+    }
+
+    @Override
+    public void deleteById(Utilisateur utilisateur) {
+
     }
 
     @Override
