@@ -1,8 +1,8 @@
 package com.pizza.app.ihm;
 
-import com.pizza.app.bdd.AppManagerResponse;
-import com.pizza.app.bdd.BasketManager;
-import com.pizza.app.bdd.BasketManagerImpl;
+import com.pizza.app.bll.AppManagerResponse;
+import com.pizza.app.bll.BasketManager;
+import com.pizza.app.bll.BasketManagerImpl;
 import com.pizza.app.bo.Commande;
 import com.pizza.app.bo.DetailCommande;
 import com.pizza.app.bo.EtatCommande;
@@ -32,7 +32,7 @@ public class BasketController {
 
         // On récupère les data commandes
         AppManagerResponse<List<Commande>> response = basketManager.getCommandes();
-        model.addAttribute("commandes", response.data);
+        model.addAttribute("commandes", response.getData());
 
         //récupère data Etat commande
 

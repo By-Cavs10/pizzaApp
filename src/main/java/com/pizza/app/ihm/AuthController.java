@@ -40,14 +40,14 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String processLogin(@Valid @ModelAttribute(name = "user") Utilisateur user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes) {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok
-        if (bindingResult.hasErrors()) {
-            // Retourner la page avec les erreurs de validation (le format)
-            return "auth/login";
-        }
+//        if (bindingResult.hasErrors()) {
+//            // Retourner la page avec les erreurs de validation (le format)
+//            return "auth/login";
+//        }
 
         // 2 : Contrôle métier (le manager)
         AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
@@ -66,7 +66,7 @@ public class AuthController {
         IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
 
         // rediriger sur ta page d'accueil
-        return "redirect:/";
+        return "redirect:/list";
     }
 
     @GetMapping("register")
@@ -96,9 +96,9 @@ public class AuthController {
 
         // Gérer les erreurs d'inscription
 
-        if (!((AppManagerResponse<Utilisateur>) response).isSuccess()) {
+        if (!response.isSuccess()) {
 
-            model.addAttribute("error", ((AppManagerResponse<Utilisateur>) response).getMessage());
+            model.addAttribute("error", response.getMessage());
             return "auth/register";
         }
 
@@ -109,10 +109,10 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    @GetMapping("logout")
-    public String logout() {
-        return "index";
-    }
+//    @GetMapping("logout")
+//    public String logout() {
+//        return "index";
+//    }
 
     @GetMapping("/utilisateurs")
     public String afficherUtilisateurs(Model model) {
@@ -125,23 +125,27 @@ public class AuthController {
     public String afficherFormulaireModification(@PathVariable Long id, Model model) {
         Utilisateur utilisateur = daoAuth.selectUtilisateurById(id);
         model.addAttribute("utilisateur", utilisateur);
-        return "utilisateurs/modifier";
+        return "auth/register";
     }
 
     @PostMapping("/utilisateurs/edit/{id}")
-    public String modifierUtilisateur(@PathVariable Long id, @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult) {
+    public String modifierUtilisateur(@PathVariable Long id, @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "utilisateurs/modifier";
+            return "auth/register";
         }
 
         utilisateur.setId(id);
         daoAuth.saveUtilisateur(utilisateur);
-        return "redirect:/utilisateurs";
+        redirectAttributes.addFlashAttribute("success", "Utilisateur modifié avec succès.");
+
+        return "redirect:/list-utilisateurs";
     }
 
     @GetMapping("/utilisateurs/delete/{id}")
-    public String supprimerUtilisateur(@PathVariable Long id) {
+    public String supprimerUtilisateur(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         daoAuth.deleteById(id);
-        return "redirect:/utilisateurs";
+        redirectAttributes.addFlashAttribute("success", "Utilisateur supprimé avec succès.");
+
+        return "redirect:list-utilisateurs";
     }
 }

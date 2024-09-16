@@ -4,7 +4,6 @@ import com.pizza.app.bo.Utilisateur;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Profile("mock")
@@ -25,6 +24,11 @@ public class DAOAuthMock implements IDAOAuth {
                 .findFirst().orElse(null);
 
         return foundUtilisateur;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
     }
 
     @Override
