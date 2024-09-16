@@ -123,4 +123,9 @@ public class DAOAuthMySQL implements IDAOAuth {
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM utilisateur WHERE id = ?", id);
     }
+
+    @Override
+    public void deleteById(Utilisateur utilisateur) {
+
+    }
 }

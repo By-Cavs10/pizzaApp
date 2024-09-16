@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 
+@SessionAttributes("loggedUser")
 @Controller
 public class AuthController {
     @Autowired
@@ -40,14 +38,14 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String processLogin(@Valid @ModelAttribute(name = "user") Utilisateur user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes) {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok
-        if (bindingResult.hasErrors()) {
-            // Retourner la page avec les erreurs de validation (le format)
-            return "auth/login";
-        }
+//        if (bindingResult.hasErrors()) {
+//            // Retourner la page avec les erreurs de validation (le format)
+//            return "auth/login";
+//        }
 
         // 2 : Contrôle métier (le manager)
         AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
@@ -57,6 +55,7 @@ public class AuthController {
             // TODO : Pendant qu'on retourne la page de connexion (envoyer l'erreur metier)
             return "auth/login";
         }
+
 
         // 3 : Connecter l'user en session
         // Mettre l'user retrouvé en base dans la session
