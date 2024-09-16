@@ -22,7 +22,7 @@ public class BasketManager implements BasketManagerImpl {
         List<Commande> commandes = daoBasket.selectCommande();
 
         //Cas 1 Succès
-        return AppManagerResponse.performResponse("200", "Les Commandes ont été récupérés avec succès", commandes);
+        return AppManagerResponse.performResponse("200", "Les Commandes ont été récupérés avec succès", commandes, true);
 
 
     }
@@ -35,11 +35,11 @@ public class BasketManager implements BasketManagerImpl {
 
         //Cas 1 : Erreur 701
         if (commande == null) {
-            return AppManagerResponse.performResponse("701", "Impossible de récupérer la commande inexistant", commande);
+            return AppManagerResponse.performResponse("701", "Impossible de récupérer la commande inexistant", commande, false);
         }
 
         //Cas 2: Succès
-        return AppManagerResponse.performResponse("200", "Les commandes ont été récupérées avec succès", commande);
+        return AppManagerResponse.performResponse("200", "Les commandes ont été récupérées avec succès", commande, true);
     }
 
     @Override

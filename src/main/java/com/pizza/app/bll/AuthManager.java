@@ -18,26 +18,26 @@ public class AuthManager {
 
         // Si couple email/mot de passe incorrect erreur code 756
         if (foundUtilisateur == null) {
-            return AppManagerResponse.performResponse("756", "Couple email/mot de passe incorrect", null);
+            return AppManagerResponse.performResponse("756", "Couple email/mot de passe incorrect", null,false);
         }
 
         // Sinon code 202
-        return AppManagerResponse.performResponse("202", "Vous êtes connecté(e) avec succès", foundUtilisateur);
+        return AppManagerResponse.performResponse("202", "Vous êtes connecté(e) avec succès", foundUtilisateur,true);
     }
 
 
     public AppManagerResponse<Utilisateur> register(Utilisateur user) {
-        // Vérifier si l'utilisateur existe déjà par email
-        if (daoAuth.existsByEmail(user.getEmail())) {
-            return new AppManagerResponse<>(null, "L'adresse email est déjà utilisée.", false);
-        }
+        try {
+            // Appeler le DAO pour enregistrer l'utilisateur dans la base
+            daoAuth.save(user);
 
-        // Enregistrer l'utilisateur dans la base de données
-        boolean isSaved = daoAuth.save(user);
-        if (isSaved) {
-            return new AppManagerResponse<>(user, "Inscription réussie.", true);
-        } else {
-            return new AppManagerResponse<>(null, "Erreur lors de l'inscription.", false);
+            // Si l'insertion est réussie, renvoyer une réponse de succès
+            return AppManagerResponse.performResponse("200", "Inscription réussie", user, true);
+        } catch (Exception e) {
+            // En cas d'exception (ex: violation de contrainte), renvoyer une réponse d'échec
+            return AppManagerResponse.performResponse("500", "Erreur lors de l'inscription : " + e.getMessage(), null, false);
         }
     }
+
+
 }
