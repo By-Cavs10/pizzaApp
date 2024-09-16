@@ -29,7 +29,7 @@ public class BasketController {
 
         // On récupère les data commandes
         AppManagerResponse<List<Commande>> response = basketManager.getCommandes();
-        model.addAttribute("commandes", response.data);
+        model.addAttribute("commandes", response.getData());
 
         //récupère data Etat commande
 

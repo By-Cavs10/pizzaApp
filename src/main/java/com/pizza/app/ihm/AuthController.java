@@ -4,6 +4,7 @@ package com.pizza.app.ihm;
 import com.pizza.app.bll.AuthManager;
 import com.pizza.app.bll.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
+import com.pizza.app.dao.DAOAuthMySQL;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
-
+    @Autowired
+    DAOAuthMySQL daoAuth;
     @Autowired
     private AuthManager authManager;
 
@@ -39,29 +41,32 @@ public class AuthController {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok
-        if (bindingResult.hasErrors()) {
-            // Retourner la page avec les erreurs de validation (le format)
-            return "auth/login";
-        }
+//        if (bindingResult.hasErrors()) {
+//            // Retourner la page avec les erreurs de validation (le format)
+//            return "auth/login";
+//        }
 
         // 2 : Contrôle métier (le manager)
         AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
 
         // Erreur code 756 retourner la page avec l'erreur métier
-        if (response.code.equals("756")) {
+        if (((AppManagerResponse<Utilisateur>) response).getCode().equals("756")) {
             // TODO : Pendant qu'on retourne la page de connexion (envoyer l'erreur metier)
             return "auth/login";
         }
 
         // 3 : Connecter l'user en session
         // Mettre l'user retrouvé en base dans la session
-        model.addAttribute("loggedUser", response.data);
+        model.addAttribute("loggedUser", ((AppManagerResponse<Utilisateur>) response).getData());
 
         // Ajouter un message temporaire (flash message)
-        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+
+        redirectAttributes.addFlashAttribute("success", "Vous êtes connecté(e) avec succès");
+
+//        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
 
         // rediriger sur ta page d'accueil
-        return "redirect:/";
+        return "redirect:/list";
     }
 
     @GetMapping("register")
@@ -91,9 +96,9 @@ public class AuthController {
 
         // Gérer les erreurs d'inscription
 
-        if (!response.success) {
+        if (!((AppManagerResponse<Utilisateur>) response).isSuccess()) {
 
-            model.addAttribute("error", response.message);
+            model.addAttribute("error", ((AppManagerResponse<Utilisateur>) response).getMessage());
             return "auth/register";
         }
 
@@ -102,10 +107,7 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("success", "Inscription réussie. Vous pouvez maintenant vous connecter.");
 
         return "redirect:/login";
+
     }
 
-    @GetMapping("logout")
-    public String logout() {
-        return "index";
-    }
 }
