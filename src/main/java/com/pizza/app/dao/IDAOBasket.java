@@ -1,8 +1,6 @@
 package com.pizza.app.dao;
 
-import com.pizza.app.bo.Commande;
-import com.pizza.app.bo.DetailCommande;
-import com.pizza.app.bo.EtatCommande;
+import com.pizza.app.bo.*;
 
 import java.util.List;
 
@@ -20,4 +18,7 @@ public interface IDAOBasket {
     List<DetailCommande> findAllDetailCommande();
 
     DetailCommande findByIdDetailCommande(Long id);
+
+
+    void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
 }

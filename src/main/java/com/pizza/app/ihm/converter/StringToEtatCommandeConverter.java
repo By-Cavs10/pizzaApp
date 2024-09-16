@@ -1,9 +1,7 @@
 package com.pizza.app.ihm.converter;
 
-import com.pizza.app.bdd.BasketManager;
-import com.pizza.app.bdd.BasketManagerImpl;
+import com.pizza.app.bll.BasketManagerImpl;
 import com.pizza.app.bo.EtatCommande;
-import com.pizza.app.dao.IDAOBasket;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

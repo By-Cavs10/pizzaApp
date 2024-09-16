@@ -1,4 +1,4 @@
-package com.pizza.app.bdd;
+package com.pizza.app.bll;
 
 public class AppManagerResponse<T> {
 

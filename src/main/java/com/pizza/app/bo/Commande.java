@@ -7,16 +7,18 @@ public class Commande {
     private Long id;
     private String date;
     private String heure;
-    private String livraison;
+    private Boolean livraison;
     private Double prixTotal;
     private Double montantPaye;
 
     private List<DetailCommande> detailCommandes;
     private EtatCommande etatCommande;
 
+    private Utilisateur utilisateur;
+
     public Commande() {}
 
-    public Commande(Long id, String date, String heure, String livraison, Double prixTotal, Double montantPaye) {
+    public Commande(Long id, String date, String heure, Boolean livraison, Double prixTotal, Double montantPaye) {
         this.id = id;
         this.date = date;
         this.heure = heure;
@@ -25,7 +27,7 @@ public class Commande {
         this.montantPaye = montantPaye;
     }
 
-    public Commande(Long id, String date, String heure, String livraison, Double prixTotal, Double montantPaye, List<DetailCommande> detailCommandes, EtatCommande etatCommande) {
+    public Commande(Long id, String date, String heure, Boolean livraison, Double prixTotal, Double montantPaye, List<DetailCommande> detailCommandes, EtatCommande etatCommande) {
         this.id = id;
         this.date = date;
         this.heure = heure;
@@ -35,6 +37,28 @@ public class Commande {
         this.detailCommandes = detailCommandes;
         this.etatCommande = etatCommande;
     }
+
+    public Commande(Long id, String date, String heure, Boolean livraison, Double prixTotal, Double montantPaye, List<DetailCommande> detailCommandes, EtatCommande etatCommande, Utilisateur utilisateur) {
+        this.id = id;
+        this.date = date;
+        this.heure = heure;
+        this.livraison = livraison;
+        this.prixTotal = prixTotal;
+        this.montantPaye = montantPaye;
+        this.detailCommandes = detailCommandes;
+        this.etatCommande = etatCommande;
+        this.utilisateur = utilisateur;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+
 
     public Long getId() {
         return id;
@@ -60,11 +84,11 @@ public class Commande {
         this.heure = heure;
     }
 
-    public String getLivraison() {
+    public Boolean getLivraison() {
         return livraison;
     }
 
-    public void setLivraison(String livraison) {
+    public void setLivraison(Boolean livraison) {
         this.livraison = livraison;
     }
 
@@ -111,8 +135,7 @@ public class Commande {
                 ", montantPaye=" + montantPaye +
                 ", detailCommandes=" + detailCommandes +
                 ", etatCommande=" + etatCommande +
+                ", utilisateur=" + utilisateur +
                 '}';
-
-
     }
 }

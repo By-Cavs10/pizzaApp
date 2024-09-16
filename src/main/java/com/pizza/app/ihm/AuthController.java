@@ -1,8 +1,8 @@
 package com.pizza.app.ihm;
 
 
-import com.pizza.app.bdd.AuthManager;
-import com.pizza.app.bdd.AppManagerResponse;
+import com.pizza.app.bll.AuthManager;
+import com.pizza.app.bll.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

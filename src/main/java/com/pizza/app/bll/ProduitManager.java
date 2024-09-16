@@ -1,4 +1,4 @@
-package com.pizza.app.bdd;
+package com.pizza.app.bll;
 
 import com.pizza.app.bo.Produit;
 import com.pizza.app.dao.IdaoProduit;
