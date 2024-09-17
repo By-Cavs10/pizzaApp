@@ -66,6 +66,19 @@ public AppManagerResponse<Commande> getById(Long id) {
         daoBasket.ajouterProduit(utilisateur, produit, quantite, livraison);
     }
 
+    public Commande creerNouvelleCommande(Utilisateur utilisateur) {
+        Commande commande = new Commande();
+        commande.setUtilisateur(utilisateur);
+        commande.setPrixTotal(0.0);
+        commande.setMontantPaye(0.0);
+        commande.setLivraison(false);
+        commande.setEtatCommande(new EtatCommande(1L, "En cours"));
+        return daoBasket.creerNouvelleCommande(commande);
+    }
+
+    public void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison) {
+       daoBasket.ajouterProduitACommande(commandeId, produit, quantite, livraison);
+    }
 
 
 }

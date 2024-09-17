@@ -143,7 +143,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        utilisateur.setId(id);
+
         daoAuth.saveUtilisateur(utilisateur);
         redirectAttributes.addFlashAttribute("success", "Utilisateur modifié avec succès.");
 

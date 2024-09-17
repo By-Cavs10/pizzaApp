@@ -10,16 +10,20 @@
 
 
 
-  <h1>panier</h1>
+<!--  <h1>panier</h1>-->
 
-  <li th:each="commande : ${commandes}" th:text="${commande}"></li>
-  <li th:each="detailsCommandes : ${detailsCommandes}" th:text="${detailsCommandes}"></li>
+<!--  <li th:each="commande : ${commandes}" th:text="${commande}"></li>-->
+<!--  <li th:each="detailsCommandes : ${detailsCommandes}" th:text="${detailsCommandes}"></li>-->
 
-</div>
-<h1>Récapitulatif du Panier</h1>
+<!--</div>-->
+
+
+h1>Panier</h1>
+
 <div th:if="${commande == null}">
   <p>Votre panier est vide.</p>
 </div>
+
 <div th:if="${commande != null}">
   <h2>Commande ID: <span th:text="${commande.id}"></span></h2>
   <ul>
@@ -27,10 +31,14 @@
       <span th:text="${detail.produit.nom}"></span> -
       <span th:text="${detail.quantite}"></span> unités -
       <span th:text="${detail.produit.prix * detail.quantite}"></span> €
+
+
     </li>
   </ul>
   <p>Total: <span th:text="${commande.prixTotal}"></span> €</p>
 </div>
+</div>
 
+<a href="list">List</a>
 </body>
 </html>

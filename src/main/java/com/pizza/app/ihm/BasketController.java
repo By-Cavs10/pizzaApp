@@ -3,6 +3,7 @@ package com.pizza.app.ihm;
 import com.pizza.app.bll.AppManagerResponse;
 import com.pizza.app.bll.BasketManagerImpl;
 import com.pizza.app.bo.*;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,18 @@ public class BasketController {
 
 
     @GetMapping("panier")
-    public String showBasket(@Valid @ModelAttribute("etatCommande") EtatCommande etatCommande,
-                             @Valid @ModelAttribute("detailCommande") DetailCommande detailCommande,
-    Model model){
+    public String showBasket(
+    Model model, HttpSession session) {
+        Long commandeId = (Long) session.getAttribute("commandeId");
+        Commande commande = null;
+
+        if (commandeId != null) {
+            commande = basketManager.getById(commandeId).getData();
+        }
+
+        model.addAttribute("commande", commande);
+
+
 
         //V1 Envoyer la liste d'aliments dans le Modèle
 //        model.addAttribute("aliments", alimentManager.getAliments());
@@ -54,7 +64,8 @@ public class BasketController {
                                  @RequestParam Double prix,
                                  @RequestParam int quantite,
                                  @RequestParam Boolean livraison,
-                                 HttpSession session) {
+                                 HttpSession session,
+                                 Model model) {
         // Récupérer l'utilisateur connecté depuis la session
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(utilisateurId);
@@ -73,9 +84,11 @@ public class BasketController {
             session.setAttribute("commandeId", commandeId);
         }
 
+        model.addAttribute("commande", commandeId);
         // Ajouter le produit à la commande
         basketManager.ajouterProduitACommande(commandeId, produit, quantite, livraison);
 
-        return "redirect:/basket/show-basket";
+        return "redirect:/panier";
     }
 }
+

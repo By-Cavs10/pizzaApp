@@ -21,4 +21,10 @@ public interface IDAOBasket {
 
 
     void ajouterProduit (Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
+
+    Commande getCommandeById(Long commandeId);
+
+    void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison);
+
+    Commande creerNouvelleCommande(Commande commande);
 }

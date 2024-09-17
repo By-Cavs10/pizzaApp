@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Profile("mysql")
@@ -45,23 +46,38 @@ public class DAOBasketMySQL implements IDAOBasket {
         @Override
         public Commande mapRow(ResultSet rs, int rowNum) throws SQLException {
             Commande commande = new Commande();
-
             commande.setId(rs.getLong("id_commande"));
             commande.setDate(rs.getString("date"));
             commande.setHeure(rs.getString("heure"));
             commande.setLivraison(rs.getBoolean("livraison"));
             commande.setPrixTotal(rs.getDouble("prix_total"));
             commande.setMontantPaye(rs.getDouble("montant_paye"));
-            Utilisateur utilisateur = daoAuth.selectUtilisateurById(rs.getLong("id_utilisateur"));
+
+            Utilisateur utilisateur = new Utilisateur();
+            utilisateur.setId(rs.getLong("id_utilisateur"));
             commande.setUtilisateur(utilisateur);
+
             EtatCommande etatCommande = new EtatCommande();
-            etatCommande.setId(rs.getLong("id_etat"));
-            etatCommande.setLibelle(rs.getString("libelle"));
+            etatCommande.setId(rs.getLong("etat_id"));  // Utilisez l'alias "etat_id"
+            etatCommande.setLibelle(rs.getString("etat_libelle"));  // Utilisez l'alias "etat_libelle"
             commande.setEtatCommande(etatCommande);
 
+            List<DetailCommande> detailCommandes = new ArrayList<>();
+            DetailCommande detailCommande = new DetailCommande();
+            detailCommande.setQuantite(rs.getLong("quantite"));
+
+            Produit produit = new Produit();
+            produit.setId(rs.getLong("PRODUIT_id_produit"));
+            produit.setNom(rs.getString("nom"));
+            produit.setPrix(rs.getDouble("prix"));
+            detailCommande.setProduit(produit);
+
+            detailCommandes.add(detailCommande);
+            commande.setDetailCommandes(detailCommandes);
 
             return commande;
         }
+
     };
 
     final RowMapper<DetailCommande> DETAILCOMMANDE_ROW_MAPPER = new RowMapper<DetailCommande>() {
@@ -93,21 +109,40 @@ public class DAOBasketMySQL implements IDAOBasket {
     @Override
     public List<Commande> selectCommande() {
 
-        return jdbcTemplate.query("SELECT * FROM commande INNER JOIN etat ON COMMANDE.ETAT_id_etat = etat.id_etat", COMMANDE_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT c.*, e.id_etat as etat_id, e.libelle as etat_libelle, dc.quantite, dc.PRODUIT_id_produit, p.nom, p.prix " +
+                "FROM COMMANDE c " +
+                "JOIN ETAT e ON c.ETAT_id_etat = e.id_etat " +
+                "LEFT JOIN DETAIL_COMMANDE dc ON c.id_commande = dc.COMMANDE_id_commande " +
+                "LEFT JOIN PRODUIT p ON dc.PRODUIT_id_produit = p.id ", COMMANDE_ROW_MAPPER);
 
     }
 
     @Override
-    public Commande selectCommandeById(Long id) {
-        List<Commande> commandes = jdbcTemplate.query("SELECT * FROM commande WHERE id_commande = ?", COMMANDE_ROW_MAPPER, id);
+    public Commande selectCommandeById(Long commandeId) {
+             String query = "SELECT c.*, e.id_etat as etat_id, e.libelle as etat_libelle, dc.quantite, dc.PRODUIT_id_produit, p.nom, p.prix " +
+        "FROM COMMANDE c " +
+                "JOIN ETAT e ON c.ETAT_id_etat = e.id_etat " +
+                "LEFT JOIN DETAIL_COMMANDE dc ON c.id_commande = dc.COMMANDE_id_commande " +
+                "LEFT JOIN PRODUIT p ON dc.PRODUIT_id_produit = p.id " +
+                "WHERE c.id_commande = ?";
 
-        //Si on trouve aucun élément on retourne null
-        if (commandes.size() == 0) {
+        List<Commande> commandes = jdbcTemplate.query(query, new Object[]{commandeId}, COMMANDE_ROW_MAPPER);
+
+        if (commandes.isEmpty()) {
             return null;
         }
 
-        //Retourner le premier élément
-        return commandes.get(0);
+        Commande commande = commandes.get(0);
+        commande.setDetailCommandes(new ArrayList<>());
+
+        for (Commande cmd : commandes) {
+            if (cmd.getDetailCommandes() != null && !cmd.getDetailCommandes().isEmpty()) {
+                commande.getDetailCommandes().addAll(cmd.getDetailCommandes());
+            }
+
+        }
+
+        return commande;
     };
 
     public Commande selectCommandeByUserId(Long id) {
@@ -205,6 +240,63 @@ public void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantit
     System.out.println("Produit ajouté avec succès dans la commande.");
 }
 
+    public Commande creerNouvelleCommande(Commande commande) {
+        String insertCommandeQuery = "INSERT INTO COMMANDE (date, heure, livraison, prix_Total, montant_Paye, id_utilisateur, ETAT_id_etat) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(insertCommandeQuery,
+                new java.sql.Date(new java.util.Date().getTime()),
+                new java.sql.Time(new java.util.Date().getTime()),
+                commande.getLivraison(),
+                commande.getPrixTotal(),
+                commande.getMontantPaye(),
+                commande.getUtilisateur().getId(),
+                1); // ID de l'état "Panier"
+
+        Long commandeId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+        commande.setId(commandeId);
+        return commande;
+    }
+
+    public void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison) {
+        // Mettre à jour la commande existante
+        Commande commande = getCommandeById(commandeId);
+        commande.setPrixTotal(commande.getPrixTotal() + (produit.getPrix() * quantite));
+        commande.setLivraison(livraison);
+
+        String updateCommandeQuery = "UPDATE COMMANDE SET prix_Total = ?, livraison = ? WHERE id_commande = ?";
+        jdbcTemplate.update(updateCommandeQuery, commande.getPrixTotal(), commande.getLivraison(), commandeId);
+
+        // Vérifier si le produit existe déjà dans la commande
+        String checkQuery = "SELECT COUNT(*) FROM DETAIL_COMMANDE WHERE COMMANDE_id_commande = ? AND PRODUIT_id_produit = ?";
+        int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{commandeId, produit.getId()}, Integer.class);
+
+        if (count > 0) {
+            // Mettre à jour la quantité du produit existant
+            String updateDetailCommandeQuery = "UPDATE DETAIL_COMMANDE SET quantite = quantite + ? WHERE COMMANDE_id_commande = ? AND PRODUIT_id_produit = ?";
+            jdbcTemplate.update(updateDetailCommandeQuery, quantite, commandeId, produit.getId());
+        } else {
+            // Insérer un nouveau détail de commande
+            String insertDetailCommandeQuery = "INSERT INTO DETAIL_COMMANDE (COMMANDE_id_commande, PRODUIT_id_produit, quantite) VALUES (?, ?, ?)";
+            jdbcTemplate.update(insertDetailCommandeQuery, commandeId, produit.getId(), quantite);
+        }
+
+
+        System.out.println("Produit ajouté avec succès dans la commande.");
+    }
+
+    public Commande getCommandeById(Long commandeId) {
+        String query = "SELECT * FROM COMMANDE WHERE id_commande = ?";
+        return jdbcTemplate.queryForObject(query, new Object[]{commandeId}, (rs, rowNum) -> {
+            Commande commande = new Commande();
+            commande.setId(rs.getLong("id_commande"));
+            commande.setDate(rs.getString("date"));
+            commande.setHeure(rs.getString("heure"));
+            commande.setLivraison(rs.getBoolean("livraison"));
+            commande.setPrixTotal(rs.getDouble("prix_Total"));
+            commande.setMontantPaye(rs.getDouble("montant_Paye"));
+            // Ajoutez d'autres champs si nécessaire
+            return commande;
+        });
+    }
 
 }
 
