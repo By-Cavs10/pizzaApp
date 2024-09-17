@@ -5,6 +5,8 @@ import com.pizza.app.bll.AuthManager;
 import com.pizza.app.bll.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
 import com.pizza.app.dao.DAOAuthMySQL;
+import com.pizza.app.dao.IDAOAuth;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,7 @@ import java.util.List;
 @Controller
 public class AuthController {
     @Autowired
-    DAOAuthMySQL daoAuth;
+    IDAOAuth daoAuth;
     @Autowired
     private AuthManager authManager;
 
@@ -38,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes) {
+    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         // 1 :: Contrôle de surface
 
         // Erreur : Si controle de surface pas ok
@@ -61,11 +63,18 @@ public class AuthController {
         // Mettre l'user retrouvé en base dans la session
         model.addAttribute("loggedUser", response.getData());
 
-        // Ajouter un message temporaire (flash message)
-        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+        Utilisateur loggedUser = authManager.authenticate(user.getEmail(), user.getPassword()).getData();
+        if (loggedUser != null) {
+            session.setAttribute("loggedUser", loggedUser);
+            // Ajouter un message temporaire (flash message)
+            IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+            return "redirect:/list";
+        }
+
+
 
         // rediriger sur ta page d'accueil
-        return "redirect:/list";
+        return "redirect:/login";
     }
 
     @GetMapping("register")

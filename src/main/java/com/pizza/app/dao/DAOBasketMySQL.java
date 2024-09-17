@@ -185,7 +185,7 @@ public class DAOBasketMySQL implements IDAOBasket {
 @Override
 public void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison) {
 // Insérer une nouvelle commande dans la table COMMANDE
-    String insertCommandeQuery = "INSERT INTO COMMANDE (date, heure, livraison, prixTotal, montantPaye, UTILISATEUR_id_utilisateur, ETAT_COMMANDE_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    String insertCommandeQuery = "INSERT INTO COMMANDE (date, heure, livraison, prix_Total, montant_Paye, id_utilisateur, ETAT_id_etat) VALUES (?, ?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(insertCommandeQuery,
             new java.sql.Date(new java.util.Date().getTime()),
             new java.sql.Time(new java.util.Date().getTime()),

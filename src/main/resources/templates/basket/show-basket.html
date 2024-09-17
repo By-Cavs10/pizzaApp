@@ -16,5 +16,21 @@
   <li th:each="detailsCommandes : ${detailsCommandes}" th:text="${detailsCommandes}"></li>
 
 </div>
+<h1>Récapitulatif du Panier</h1>
+<div th:if="${commande == null}">
+  <p>Votre panier est vide.</p>
+</div>
+<div th:if="${commande != null}">
+  <h2>Commande ID: <span th:text="${commande.id}"></span></h2>
+  <ul>
+    <li th:each="detail : ${commande.detailCommandes}">
+      <span th:text="${detail.produit.nom}"></span> -
+      <span th:text="${detail.quantite}"></span> unités -
+      <span th:text="${detail.produit.prix * detail.quantite}"></span> €
+    </li>
+  </ul>
+  <p>Total: <span th:text="${commande.prixTotal}"></span> €</p>
+</div>
+
 </body>
 </html>

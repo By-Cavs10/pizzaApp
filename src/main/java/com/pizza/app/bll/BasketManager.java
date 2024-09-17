@@ -1,8 +1,6 @@
 package com.pizza.app.bll;
 
-import com.pizza.app.bo.Commande;
-import com.pizza.app.bo.DetailCommande;
-import com.pizza.app.bo.EtatCommande;
+import com.pizza.app.bo.*;
 import com.pizza.app.dao.IDAOBasket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,4 +60,12 @@ public AppManagerResponse<Commande> getById(Long id) {
     public List<DetailCommande> getDetailCommandes() {
         return daoBasket.findAllDetailCommande();
     }
+
+    public void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison) {
+        // Ajoute ici toute logique métier supplémentaire si nécessaire
+        daoBasket.ajouterProduit(utilisateur, produit, quantite, livraison);
+    }
+
+    
+
 }

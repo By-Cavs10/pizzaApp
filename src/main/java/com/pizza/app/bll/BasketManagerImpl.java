@@ -20,4 +20,6 @@ public interface BasketManagerImpl {
     List<DetailCommande> getDetailCommandes();
 
     void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
+
+
 }

@@ -53,7 +53,9 @@ public class BasketController {
                                  @RequestParam Long produitId,
                                  @RequestParam Double prix,
                                  @RequestParam int quantite,
-                                 @RequestParam Boolean livraison) {
+                                 @RequestParam Boolean livraison,
+                                 HttpSession session) {
+        // Récupérer l'utilisateur connecté depuis la session
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(utilisateurId);
 
@@ -61,8 +63,19 @@ public class BasketController {
         produit.setId(produitId);
         produit.setPrix(prix);
 
-        basketManager.ajouterProduit(utilisateur, produit, quantite, livraison);
+        // Récupérer l'ID de la commande en cours depuis la session
+        Long commandeId = (Long) session.getAttribute("commandeId");
 
-        return "Produit ajouté avec succès dans la commande.";
+        // Si aucune commande en cours, créer une nouvelle commande
+        if (commandeId == null) {
+            Commande nouvelleCommande = basketManager.creerNouvelleCommande(utilisateur);
+            commandeId = nouvelleCommande.getId();
+            session.setAttribute("commandeId", commandeId);
+        }
+
+        // Ajouter le produit à la commande
+        basketManager.ajouterProduitACommande(commandeId, produit, quantite, livraison);
+
+        return "redirect:/basket/show-basket";
     }
 }

@@ -26,7 +26,7 @@
     </div>
 
     <ul>
-        <li th:each="produit : ${produits}"  class="uk-padding-small">
+        <li th:each="produit : ${produits}"   class="uk-padding-small">
             <div th:style="'background-image: url(' + @{${produit.image}} + ');'">
             <span th:text="${produit.nom}"></span> - <span th:text="${produit.prix}"></span> €
             <form th:action="@{/ajouterProduit}" method="post">
@@ -34,7 +34,7 @@
                 <span th:text="${produit.description}"></span>
                 <span th:text="${'prix:'+produit.prix+'€'}"></span>
                 <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>
-                <input type="hidden" name="utilisateurId" th:value="${session.utilisateurId}"> <!-- Exemple de récupération de l'ID utilisateur -->
+                <input type="hidden" name="utilisateurId" th:value="${loggedUser.id}"> <!-- Exemple de récupération de l'ID utilisateur -->
                 <input type="hidden" name="produitId" th:value="${produit.id}">
                 <input type="hidden" name="prix" th:value="${produit.prix}">
                 <input type="number" name="quantite" value="1" min="1">
