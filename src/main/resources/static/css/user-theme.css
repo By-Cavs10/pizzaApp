@@ -1,0 +1,122 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+/* Style pour le titre H1 d'une pizzeria */
+h1 {
+    font-family: 'Pacifico', cursive; /* Une police manuscrite pour donner un côté chaleureux */
+    font-size: 48px; /* Taille plus grande pour un titre accrocheur */
+    color: #d32f2f; /* Rouge pizzeria (tomate) pour rappeler la cuisine italienne */
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Légère ombre pour donner du relief */
+    margin-bottom: 20px;
+    letter-spacing: 2px; /* Espacement des lettres pour rendre le titre plus aéré */
+    background: linear-gradient(to right, #ffeb3b, #f57c00); /* Dégradé jaune-orange pour rappeler le fromage et la pâte de pizza */
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h1::after {
+    content: "";
+    display: inline-block;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3595/3595458.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 20px;  /* Largeur de l'image */
+    height: 20px; /* Hauteur de l'image */
+    margin-left: 10px;
+}
+
+/* Header */
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:hover td {
+    background-color: #f1f1f1;
+}
+
+/* Action Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    table, th, td {
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}

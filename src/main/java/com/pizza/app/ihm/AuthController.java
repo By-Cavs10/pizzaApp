@@ -5,6 +5,7 @@ import com.pizza.app.bll.AuthManager;
 import com.pizza.app.bll.AppManagerResponse;
 import com.pizza.app.bo.Utilisateur;
 import com.pizza.app.dao.DAOAuthMySQL;
+import com.pizza.app.dao.IDAOAuth;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,7 @@ import java.util.List;
 @Controller
 public class AuthController {
     @Autowired
-    DAOAuthMySQL daoAuth;
+    IDAOAuth daoAuth;
     @Autowired
     private AuthManager authManager;
 
@@ -124,28 +125,29 @@ public class AuthController {
     @GetMapping("/utilisateurs/edit/{id}")
     public String afficherFormulaireModification(@PathVariable Long id, Model model) {
         Utilisateur utilisateur = daoAuth.selectUtilisateurById(id);
-        model.addAttribute("utilisateur", utilisateur);
-        return "auth/register";
+        System.out.println("ulitisateur" + utilisateur);
+        model.addAttribute("user", utilisateur);
+        return "auth/modifier";
     }
 
-    @PostMapping("/utilisateurs/edit/{id}")
-    public String modifierUtilisateur(@PathVariable Long id, @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+    @PostMapping("/utilisateurs/edit")
+    public String modifierUtilisateur( @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/register";
         }
 
-        utilisateur.setId(id);
         daoAuth.saveUtilisateur(utilisateur);
         redirectAttributes.addFlashAttribute("success", "Utilisateur modifié avec succès.");
 
-        return "redirect:/list-utilisateurs";
+        return "redirect:/utilisateurs";
     }
 
     @GetMapping("/utilisateurs/delete/{id}")
     public String supprimerUtilisateur(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        daoAuth.deleteById(id);
+       daoAuth.deleteById(id);
+
         redirectAttributes.addFlashAttribute("success", "Utilisateur supprimé avec succès.");
 
-        return "redirect:list-utilisateurs";
+        return "redirect:/utilisateurs";
     }
 }

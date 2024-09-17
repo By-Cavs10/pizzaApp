@@ -65,13 +65,14 @@ public class DAOAuthMySQL implements IDAOAuth {
 
         //Tester si il existe en base, SI OUI => Update SINON => Insert
         if (Objects.nonNull(utilisateur.getId()) && selectUtilisateurById(utilisateur.getId()) != null) {
-            jdbcTemplate.update("UPDATE utilisateur SET id_utilisateur= ?, email = ?, password = ?"
-                    , utilisateur.getId(), utilisateur.getEmail(), utilisateur.getPassword());
+            jdbcTemplate.update("UPDATE utilisateur SET nom =?,prenom =?, email = ?, password = ?,rue =?,code_postal =?,ville =?,employe =? where id_utilisateur=?",
+                    utilisateur.getNom(), utilisateur.getPrenom(), utilisateur.getEmail(), utilisateur.getPassword(), utilisateur.getRue(), utilisateur.getCodePostal(),
+                    utilisateur.getVille(), utilisateur.isEmploye(), utilisateur.getId());
 
 
             //PS : Return = Arreter la fonction
             return;
-//
+
         } else {
             jdbcTemplate.update(
                     "INSERT INTO utilisateur (nom, prenom, email, password, rue, code_postal, ville, employe) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
