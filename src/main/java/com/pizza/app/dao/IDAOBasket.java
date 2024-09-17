@@ -20,5 +20,5 @@ public interface IDAOBasket {
     DetailCommande findByIdDetailCommande(Long id);
 
 
-    void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
+    void ajouterProduit (Utilisateur utilisateur, Produit produit, int quantite, Boolean livraison);
 }

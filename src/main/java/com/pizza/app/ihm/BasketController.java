@@ -1,20 +1,17 @@
 package com.pizza.app.ihm;
 
 import com.pizza.app.bll.AppManagerResponse;
-import com.pizza.app.bll.BasketManager;
 import com.pizza.app.bll.BasketManagerImpl;
-import com.pizza.app.bo.Commande;
-import com.pizza.app.bo.DetailCommande;
-import com.pizza.app.bo.EtatCommande;
+import com.pizza.app.bo.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SessionAttributes("loggedUser")
 @Controller
 public class BasketController {
 
@@ -51,10 +48,21 @@ public class BasketController {
 
     }
 
-//    @GetMapping("show-basket-2")
-//    public String showBasket() {
-//        // affiche la page (qui affiche le panier)
-//        return "basket/show-basket";
-//    }
+    @PostMapping("/ajouterProduit")
+    public String ajouterProduit(@RequestParam Long utilisateurId,
+                                 @RequestParam Long produitId,
+                                 @RequestParam Double prix,
+                                 @RequestParam int quantite,
+                                 @RequestParam Boolean livraison) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setId(utilisateurId);
 
+        Produit produit = new Produit();
+        produit.setId(produitId);
+        produit.setPrix(prix);
+
+        basketManager.ajouterProduit(utilisateur, produit, quantite, livraison);
+
+        return "Produit ajouté avec succès dans la commande.";
+    }
 }
