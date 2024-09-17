@@ -3,11 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
 
-
-<title layout:fragment="title">Liste des Utilisateurs</title>
-<div layout:fragment="content">
-
-
+<head>
+    <title layout:fragment="title">Liste des Utilisateurs</title>
+    <link rel="stylesheet" th:href="@{/css/user-theme.css}">
+</head>
+<body>
+<div layout:fragment="content" class="container">
 
 
     <h1>Liste des Utilisateurs</h1>
@@ -37,9 +38,11 @@
             <td th:text="${utilisateur.ville}"></td>
             <td th:text="${utilisateur.employe ? 'Oui' : 'Non'}"></td>
             <td>
-                <a th:href="@{'/utilisateurs/edit/' + ${utilisateur.id}}">Modifier</a> |
-                <a th:href="@{'/utilisateurs/delete/' + ${utilisateur.id}}"
-                   onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+                <div class="action-buttons">
+                    <a th:href="@{/utilisateurs/edit/{id}(id=${utilisateur.id})}" class="btn btn-edit" >Modifier</a> |
+                    <a th:href="@{/utilisateurs/delete/{id}(id=${utilisateur.id})}" class="btn btn-delete"
+                       onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+                </div>
             </td>
         </tr>
         </tbody>
@@ -47,4 +50,5 @@
 
 
 </div>
+</body>
 </html>

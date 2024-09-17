@@ -132,12 +132,13 @@ public class AuthController {
     @GetMapping("/utilisateurs/edit/{id}")
     public String afficherFormulaireModification(@PathVariable Long id, Model model) {
         Utilisateur utilisateur = daoAuth.selectUtilisateurById(id);
-        model.addAttribute("utilisateur", utilisateur);
-        return "auth/register";
+        System.out.println("ulitisateur" + utilisateur);
+        model.addAttribute("user", utilisateur);
+        return "auth/modifier";
     }
 
-    @PostMapping("/utilisateurs/edit/{id}")
-    public String modifierUtilisateur(@PathVariable Long id, @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+    @PostMapping("/utilisateurs/edit")
+    public String modifierUtilisateur( @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/register";
         }
@@ -146,14 +147,15 @@ public class AuthController {
         daoAuth.saveUtilisateur(utilisateur);
         redirectAttributes.addFlashAttribute("success", "Utilisateur modifié avec succès.");
 
-        return "redirect:/list-utilisateurs";
+        return "redirect:/utilisateurs";
     }
 
     @GetMapping("/utilisateurs/delete/{id}")
     public String supprimerUtilisateur(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        daoAuth.deleteById(id);
+       daoAuth.deleteById(id);
+
         redirectAttributes.addFlashAttribute("success", "Utilisateur supprimé avec succès.");
 
-        return "redirect:list-utilisateurs";
+        return "redirect:/utilisateurs";
     }
 }

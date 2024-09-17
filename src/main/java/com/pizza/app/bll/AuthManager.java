@@ -29,7 +29,7 @@ public class AuthManager {
     public AppManagerResponse<Utilisateur> register(Utilisateur user) {
         try {
             // Appeler le DAO pour enregistrer l'utilisateur dans la base
-            daoAuth.save(user);
+            daoAuth.saveUtilisateur(user);
 
             // Si l'insertion est réussie, renvoyer une réponse de succès
             return AppManagerResponse.performResponse("200", "Inscription réussie", user, true);
