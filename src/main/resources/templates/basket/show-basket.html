@@ -9,32 +9,40 @@
 <div layout:fragment="content">
 
 
+    h1>Panier</h1>
+
+    <div th:if="${commande == null}">
+        <p>Votre panier est vide.</p>
+    </div>
+
+    <div th:if="${commande != null}">
+        <h2>Commande ID: <span th:text="${commande.id}"></span></h2>
+        <ul>
+            <li th:each="detail : ${commande.detailCommandes}">
+                <img th:src="@{${detail.produit.image}}" alt="Image du produit" width="100" height="100"/>
+                <span th:text="${detail.produit.nom}"></span> -
+                <span th:text="${detail.quantite}"></span> unités -
+                <span th:text="${detail.produit.prix * detail.quantite}"></span> €
 
 
+            </li>
+        </ul>
 
-h1>Panier</h1>
 
-<div th:if="${commande == null}">
-  <p>Votre panier est vide.</p>
+        <p>Total: <span th:text="${commande.prixTotal}"></span> €</p>
+    </div>
+
+
+    <div th:if="${commande != null}">
+
+
+    </div>
+
+    <form action="/validerCommande" method="post">
+        <button type="submit">Valider la commande</button>
+    </form>
+    <a href="list">List</a>
+
 </div>
-
-<div th:if="${commande != null}">
-  <h2>Commande ID: <span th:text="${commande.id}"></span></h2>
-  <ul>
-    <li th:each="detail : ${commande.detailCommandes}">
-      <span th:text="${detail.produit.nom}"></span> -
-      <span th:text="${detail.quantite}"></span> unités -
-      <span th:text="${detail.produit.prix * detail.quantite}"></span> €
-
-
-    </li>
-  </ul>
-  <p>Total: <span th:text="${commande.prixTotal}"></span> €</p>
-</div>
-</div>
-<form action="/validerCommande" method="post">
-  <button type="submit">Valider la commande</button>
-</form>
-<a href="list">List</a>
 </body>
 </html>
