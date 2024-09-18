@@ -27,4 +27,6 @@ public interface IDAOBasket {
     void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison);
 
     Commande creerNouvelleCommande(Commande commande);
+
+    void changerEtatCommande(Long commandeId, Long nouvelEtat);
 }

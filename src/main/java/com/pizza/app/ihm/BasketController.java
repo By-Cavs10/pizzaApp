@@ -63,7 +63,7 @@ public class BasketController {
                                  @RequestParam Long produitId,
                                  @RequestParam Double prix,
                                  @RequestParam int quantite,
-                                 @RequestParam Boolean livraison,
+//                                 @RequestParam Boolean livraison,
                                  HttpSession session,
                                  Model model) {
         // Récupérer l'utilisateur connecté depuis la session
@@ -77,9 +77,15 @@ public class BasketController {
         // Récupérer l'ID de la commande en cours depuis la session
         Long commandeId = (Long) session.getAttribute("commandeId");
 
+        // Récupérer le choix de livraison de la session
+         Boolean livraison = (Boolean) session.getAttribute("livraison");
+        if (livraison == null) {
+            livraison = false; // Valeur par défaut si pas encore défini
+        }
+
         // Si aucune commande en cours, créer une nouvelle commande
         if (commandeId == null) {
-            Commande nouvelleCommande = basketManager.creerNouvelleCommande(utilisateur);
+            Commande nouvelleCommande = basketManager.creerNouvelleCommande(utilisateur, livraison);
             commandeId = nouvelleCommande.getId();
             session.setAttribute("commandeId", commandeId);
         }
@@ -89,6 +95,29 @@ public class BasketController {
         basketManager.ajouterProduitACommande(commandeId, produit, quantite, livraison);
 
         return "redirect:/panier";
+    }
+    @GetMapping("/choisirLivraison")
+    public String afficherChoixLivraison() {
+        // Affiche la page où l'utilisateur peut choisir livraison ou à emporter
+        return "basket/choice-delivery";
+    }
+    @PostMapping("/choisirLivraison")
+    public String choixLivraison(@RequestParam Boolean livraison, HttpSession session) {
+        // Stocke le choix de livraison dans la session
+        session.setAttribute("livraison", livraison);
+        return "redirect:/list"; // Redirige vers la page de la liste des pizzas
+    }
+
+    @PostMapping("/validerCommande")
+    public String validerCommande(HttpSession session) {
+        Long commandeId = (Long) session.getAttribute("commandeId");
+
+        if (commandeId != null) {
+            basketManager.validerCommande(commandeId); // Appelle la méthode pour valider la commande
+            session.removeAttribute("commandeId"); // Optionnel : retirer la commande de la session après validation
+        }
+
+        return "redirect:/compte"; // Rediriger vers une page de confirmation, par exemple
     }
 }
 

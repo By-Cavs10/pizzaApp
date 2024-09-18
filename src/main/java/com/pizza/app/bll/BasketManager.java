@@ -5,6 +5,7 @@ import com.pizza.app.dao.IDAOBasket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.StyledEditorKit;
 import java.util.List;
 
 
@@ -66,12 +67,13 @@ public AppManagerResponse<Commande> getById(Long id) {
         daoBasket.ajouterProduit(utilisateur, produit, quantite, livraison);
     }
 
-    public Commande creerNouvelleCommande(Utilisateur utilisateur) {
+    public Commande creerNouvelleCommande(Utilisateur utilisateur, Boolean livraison) {
         Commande commande = new Commande();
         commande.setUtilisateur(utilisateur);
         commande.setPrixTotal(0.0);
         commande.setMontantPaye(0.0);
-        commande.setLivraison(false);
+//        commande.setLivraison(false);
+        commande.setLivraison(livraison);
         commande.setEtatCommande(new EtatCommande(1L, "En cours"));
         return daoBasket.creerNouvelleCommande(commande);
     }
@@ -79,4 +81,10 @@ public AppManagerResponse<Commande> getById(Long id) {
     public void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison) {
        daoBasket.ajouterProduitACommande(commandeId, produit, quantite, livraison);
     }
+
+    // Méthode pour valider la commande et changer l'état
+    public void validerCommande(Long commandeId) {
+        daoBasket.changerEtatCommande(commandeId, 2L); // 2 = En préparation
+    }
+
 }

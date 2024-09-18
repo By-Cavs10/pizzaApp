@@ -68,7 +68,7 @@ public class AuthController {
             session.setAttribute("loggedUser", loggedUser);
             // Ajouter un message temporaire (flash message)
             IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
-            return "redirect:/list";
+            return "redirect:/compte";
         }
 
 
@@ -157,5 +157,10 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("success", "Utilisateur supprimé avec succès.");
 
         return "redirect:/utilisateurs";
+    }
+
+    @GetMapping("compte")
+    public String compte (){
+        return "auth/account";
     }
 }

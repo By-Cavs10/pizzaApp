@@ -23,7 +23,9 @@ public interface BasketManagerImpl {
 
     void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison);
 
-    Commande creerNouvelleCommande(Utilisateur utilisateur);
+    Commande creerNouvelleCommande(Utilisateur utilisateur, Boolean livraison);
+
+    void validerCommande(Long commandeId);
 
 
 }

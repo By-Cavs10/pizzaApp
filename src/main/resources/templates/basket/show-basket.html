@@ -38,7 +38,9 @@ h1>Panier</h1>
   <p>Total: <span th:text="${commande.prixTotal}"></span> €</p>
 </div>
 </div>
-
+<form action="/validerCommande" method="post">
+  <button type="submit">Valider la commande</button>
+</form>
 <a href="list">List</a>
 </body>
 </html>
