@@ -2,6 +2,8 @@ package com.pizza.app.ihm;
 
 import com.pizza.app.bll.OrderManagerImpl;
 import com.pizza.app.bo.Commande;
+import com.pizza.app.bo.DetailCommande;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,15 +24,12 @@ public class OrderController {
     public String getAllCommandes(Model model) {
         List<Commande> commandes = orderManager.getAllCommandes();
         model.addAttribute("commandes", commandes);
-        return "order";
+        return "basket/order";
     }
 
     @PostMapping("/updateEtatCommande")
-    public String updateEtatCommande(@RequestParam Long commandeId, @RequestParam Long etatId) {
+    public String updateEtatCommande(@RequestParam Long etat,Long id ) {
 
-        if (etatId == 2) {
-            orderManager.updateEtatCommande(commandeId, 3L);
-        }
         return "redirect:/commandes";
     }
 
