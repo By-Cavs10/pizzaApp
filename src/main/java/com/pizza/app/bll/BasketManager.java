@@ -79,6 +79,4 @@ public AppManagerResponse<Commande> getById(Long id) {
     public void ajouterProduitACommande(Long commandeId, Produit produit, int quantite, Boolean livraison) {
        daoBasket.ajouterProduitACommande(commandeId, produit, quantite, livraison);
     }
-
-
 }
