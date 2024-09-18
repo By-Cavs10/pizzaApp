@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+<title layout:fragment="title">Panier</title>
+<div layout:fragment="content">
+    <body>
+    <h1>Commandes</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Livraison</th>
+            <th>Prix total</th>
+            <th>Montant payé</th>
+            <th>Etat</th>
+            <th>Action</th>
+            <th>Détails de commande</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="commande : ${commandes}">
+            <td th:text="${commande.id}"></td>
+            <td th:text="${commande.date}"></td>
+            <td th:text="${commande.heure}"></td>
+            <td th:text="${commande.livraison}"></td>
+            <td th:text="${commande.prixTotal}"></td>
+            <td th:text="${commande.montantPaye}"></td>
+            <td th:text="${commande.etatCommande.libelle}"></td>
+            <td>
+                <form th:action="@{/updateEtatCommande}" method="post">
+                    <input type="hidden" name="commandeId" th:value="${commande.id}">
+                    <input type="hidden" name="livraison" th:value="${commande.livraison}">
+                    <button type="submit" th:text="${commande.livraison} ? 'Prête' : 'Livrée'"></button>
+                </form>
+            </td>
+            <td>
+                <ul>
+                    <li th:each="detailCommande : ${commande.detailCommandes}">
+                        <span th:text="${detailCommande.produit.nom}"></span> (<span
+                            th:text="${detailCommande.quantite}"></span>)
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    </body>
+</div>
+</html>
