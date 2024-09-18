@@ -27,7 +27,13 @@ public class BasketController {
         Commande commande = null;
 
         if (commandeId != null) {
-            commande = basketManager.getById(commandeId).getData();
+            AppManagerResponse<Commande> response = basketManager.getById(commandeId);
+            if (response != null && response.getData() != null) {
+                commande = response.getData();
+            } else {
+                // Gérer le cas où la commande est nulle
+                model.addAttribute("error", "Commande non trouvée");
+            }
         }
 
         model.addAttribute("commande", commande);
