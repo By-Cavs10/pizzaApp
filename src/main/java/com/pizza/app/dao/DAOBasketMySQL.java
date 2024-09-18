@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -296,6 +298,11 @@ public void ajouterProduit(Utilisateur utilisateur, Produit produit, int quantit
             // Ajoutez d'autres champs si nécessaire
             return commande;
         });
+    }
+
+    public void changerEtatCommande(Long commandeId, Long nouvelEtat) {
+        String sql = "UPDATE commande SET etat_id_etat = ? WHERE id_commande = ?";
+        jdbcTemplate.update(sql, nouvelEtat, commandeId);
     }
 
 }

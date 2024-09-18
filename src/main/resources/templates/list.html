@@ -11,19 +11,19 @@
 
     <a th:href="@{/create-produit}"><button class="styled" type="button">Ajouter un produit </button></a>
 
-    <div th:each="produit : ${produits}" class="uk-padding-small">
-        <div th:style="'background-image: url(' + @{${produit.image}} + ');'">
-            <div>
+<!--    <div th:each="produit : ${produits}" class="uk-padding-small">-->
+<!--        <div th:style="'background-image: url(' + @{${produit.image}} + ');'">-->
+<!--            <div>-->
 
-                    <h1 th:text="${produit.nom}"></h1>
-                <span th:text="${produit.description}"></span>
-                <span th:text="${'prix:'+produit.prix+'€'}"></span>
-                <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>
-            </div>
-            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button  type="button">Modifier </button></a>
-            <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}"><button  type="button">Supprimer</button></a>
-        </div>
-    </div>
+<!--                    <h1 th:text="${produit.nom}"></h1>-->
+<!--                <span th:text="${produit.description}"></span>-->
+<!--                <span th:text="${'prix:'+produit.prix+'€'}"></span>-->
+<!--                <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>-->
+<!--            </div>-->
+<!--            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button  type="button">Modifier </button></a>-->
+<!--            <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}"><button  type="button">Supprimer</button></a>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <ul>
         <li th:each="produit : ${produits}"   class="uk-padding-small">
