@@ -13,19 +13,17 @@
 
         <h1 class="uk-heading-divider uk-text-center">Se connecter</h1>
 
-        <form th:action="@{/login}" method="post" th:object="${user}">
+        <form th:action="@{/login}" method="post" >
 
             <!-- Champ email -->
             <div class="uk-margin">
-                <input th:field="*{email}" class="uk-input" placeholder="Saisir l'email"/>
-                <ul th:if="${#fields.hasErrors('email')}">
-                    <li class="uk-form-danger" th:each="error: ${#fields.errors('email')}" th:text="${error}"></li>
-                </ul>
+                <input name="username" class="uk-input" placeholder="Saisir l'email"/>
+
             </div>
 
             <!-- Champ password -->
             <div class="uk-margin">
-                <input th:field="*{password}" class="uk-input" placeholder="Saisir le mot de passe" type="password"/>
+                <input name="password" class="uk-input" placeholder="Saisir le mot de passe" type="password"/>
             </div>
 
             <!-- Bouton submit -->

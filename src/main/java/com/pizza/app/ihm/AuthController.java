@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -31,51 +32,37 @@ public class AuthController {
 
 
         // Instancier un User vide (email et password vide)
-        Utilisateur user = new Utilisateur();
+       // Utilisateur user = new Utilisateur();
 
         // Envoyer le user dans le Model
-        model.addAttribute("user", user);
+       // model.addAttribute("user", user);
 
         return "auth/login";
     }
 
-    @PostMapping("login")
-    public String processLogin( @ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
-        // 1 :: Contrôle de surface
-
-        // Erreur : Si controle de surface pas ok
-//        if (bindingResult.hasErrors()) {
-//            // Retourner la page avec les erreurs de validation (le format)
+    @GetMapping("/proccesLogin")
+    public String processLogin( Model model,Principal principal, RedirectAttributes redirectAttributes, HttpSession session) {
+//        // Authentification (contrôle métier)
+//        AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
+//
+//        // Si erreur d'authentification, retourner la page de login avec un message d'erreur
+//        if (response.getCode().equals("756")) {
+//            // Ajouter le message d'erreur dans le modèle (si tu veux l'afficher)
+//            model.addAttribute("errorMessage", response.getMessage());
 //            return "auth/login";
 //        }
 
-        // 2 : Contrôle métier (le manager)
-        AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
+        // Si l'authentification réussit, mettre l'utilisateur en session
+        Utilisateur loggedUser = authManager.getUtilisateurByEmail(principal.getName());
+        session.setAttribute("loggedUser", loggedUser);
 
-        // Erreur code 756 retourner la page avec l'erreur métier
-        if (response.getCode().equals("756")) {
-            // TODO : Pendant qu'on retourne la page de connexion (envoyer l'erreur metier)
-            return "auth/login";
-        }
+        // Ajouter un message de succès en flash
+        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
 
-
-        // 3 : Connecter l'user en session
-        // Mettre l'user retrouvé en base dans la session
-        model.addAttribute("loggedUser", response.getData());
-
-        Utilisateur loggedUser = authManager.authenticate(user.getEmail(), user.getPassword()).getData();
-        if (loggedUser != null) {
-            session.setAttribute("loggedUser", loggedUser);
-            // Ajouter un message temporaire (flash message)
-            IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
-            return "redirect:/compte";
-        }
-
-
-
-        // rediriger sur ta page d'accueil
-        return "redirect:/login";
+        // Rediriger vers la page d'accueil ou la page compte
+        return "redirect:/compte";
     }
+
 
     @GetMapping("register")
     public String showRegistrationForm(Model model) {
@@ -94,6 +81,8 @@ public class AuthController {
         // 1 :: Contrôle de surface (validation du formulaire)
 
         if (bindingResult.hasErrors()) {
+
+
 
             return "auth/register";
         }
@@ -117,10 +106,10 @@ public class AuthController {
         return "redirect:/login";
     }
 
-//    @GetMapping("logout")
-//    public String logout() {
-//        return "index";
-//    }
+    @GetMapping("logout")
+    public String logout() {
+        return "index";
+    }
 
     @GetMapping("/utilisateurs")
     public String afficherUtilisateurs(Model model) {
@@ -138,7 +127,7 @@ public class AuthController {
     }
 
     @PostMapping("/utilisateurs/edit")
-    public String modifierUtilisateur( @Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+    public String modifierUtilisateur(@Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/register";
         }
@@ -152,7 +141,7 @@ public class AuthController {
 
     @GetMapping("/utilisateurs/delete/{id}")
     public String supprimerUtilisateur(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-       daoAuth.deleteById(id);
+        daoAuth.deleteById(id);
 
         redirectAttributes.addFlashAttribute("success", "Utilisateur supprimé avec succès.");
 
@@ -160,7 +149,9 @@ public class AuthController {
     }
 
     @GetMapping("compte")
-    public String compte (){
+    public String compte() {
         return "auth/account";
     }
+
+
 }
