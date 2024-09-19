@@ -6,12 +6,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.relational.core.sql.Join.JoinType.JOIN;
 
@@ -20,6 +23,9 @@ import static org.springframework.data.relational.core.sql.Join.JoinType.JOIN;
 public class DAOOrderMySQL implements IDAOOrder {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     final RowMapper<Commande> COMMANDE_ROW_MAPPER = new RowMapper<Commande>() {
 
@@ -33,9 +39,9 @@ public class DAOOrderMySQL implements IDAOOrder {
             commande.setPrixTotal(rs.getDouble("prix_total"));
             commande.setMontantPaye(rs.getDouble("montant_paye"));
 
-            Utilisateur utilisateur = new Utilisateur();
-            utilisateur.setId(rs.getLong("id_utilisateur"));
-            commande.setUtilisateur(utilisateur);
+//            Utilisateur utilisateur = new Utilisateur();
+//            utilisateur.setId(rs.getLong("id_utilisateur"));
+//            commande.setUtilisateur(utilisateur);
 
             EtatCommande etatCommande = new EtatCommande();
             etatCommande.setId(rs.getLong("etat_id"));  // Utilisez l'alias "etat_id"
@@ -115,5 +121,24 @@ public class DAOOrderMySQL implements IDAOOrder {
         jdbcTemplate.update(sql, etatId, commandeId);
     }
 
+    // DAO
+    public Long getEtatCommande(Long commandeId) {
+        String sql = "SELECT ETAT_id_etat FROM COMMANDE WHERE id_commande = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{commandeId}, Long.class);
+    }
+
+    public List<Commande> getCommandesByEtatIds(List<Long> etatIds) {
+        // Construire la clause WHERE avec des paramètres dynamiques
+        String sql = "SELECT c.id_commande, c.date, c.heure, c.livraison, c.prix_total, c.montant_paye, " +
+                "e.id_etat as etat_id, e.libelle as etat_libelle " +
+                "FROM COMMANDE c " +
+                "JOIN ETAT e ON c.ETAT_id_etat = e.id_etat " +
+                "WHERE e.id_etat IN (" +
+                etatIds.stream().map(e -> "?").collect(Collectors.joining(",")) +
+                ")";
+
+        // Exécuter la requête avec les paramètres
+        return jdbcTemplate.query(sql, etatIds.toArray(), COMMANDE_ROW_MAPPER);
+    }
 }
 

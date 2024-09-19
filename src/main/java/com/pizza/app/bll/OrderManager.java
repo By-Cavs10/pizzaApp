@@ -23,10 +23,29 @@ public class OrderManager implements OrderManagerImpl {
 
     }
 
+//    public void updateEtatCommande(Long commandeId, Boolean livraison) {
+//        Long nouvelEtat = livraison ? 3L : 4L;
+//
+//        daoOrder.updateEtatCommande(commandeId, nouvelEtat);
+//
+//    }
+
     public void updateEtatCommande(Long commandeId, Boolean livraison) {
-        Long nouvelEtat = livraison ? 3L : 4L;
+        // Vérification de l'état actuel de la commande pour ne pas passer d'un mauvais état
+        Long etatActuel = daoOrder.getEtatCommande(commandeId);
 
-        daoOrder.updateEtatCommande(commandeId, nouvelEtat);
+        // Si l'état actuel est 2, on procède au changement
+        if (etatActuel == 2L) {
+            Long nouvelEtat = livraison ? 3L : 4L;
+            daoOrder.updateEtatCommande(commandeId, nouvelEtat);
+        } else if (etatActuel == 3L && livraison) {
+            // Si déjà à l'état 3 et livraison est true, passer à 4
+            daoOrder.updateEtatCommande(commandeId, 4L);
+        }
+    }
 
+    // Service
+    public List<Commande> getCommandesByEtatIds(List<Long> etatIds) {
+        return daoOrder.getCommandesByEtatIds(etatIds);
     }
 }

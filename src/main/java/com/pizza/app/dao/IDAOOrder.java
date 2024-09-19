@@ -10,4 +10,9 @@ public interface IDAOOrder {
     void updateEtatCommande(Long commandeId, Long etatId);
 
     List<DetailCommande> getAllDetailByIdCommandes(Long  idCommande);
+
+
+    Long getEtatCommande(Long commandeId);
+
+    List<Commande> getCommandesByEtatIds(List<Long> etatIds);
 }

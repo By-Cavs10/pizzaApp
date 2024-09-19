@@ -115,7 +115,7 @@ public class BasketController {
     public String choixLivraison(@RequestParam Boolean livraison, HttpSession session) {
         // Stocke le choix de livraison dans la session
         session.setAttribute("livraison", livraison);
-        return "redirect:/list"; // Redirige vers la page de la liste des pizzas
+        return "redirect:/list2"; // Redirige vers la page de la liste des pizzas
     }
 
     @PostMapping("/validerCommande")

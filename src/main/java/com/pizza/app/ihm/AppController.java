@@ -16,7 +16,7 @@ public class AppController {
     ProduitManager produitManager;
 
 
-    @GetMapping("list")
+    @GetMapping("list2")
     public String showlist(Model model, HttpSession session, Utilisateur loggedUser) {
 
         model.addAttribute("produits", produitManager.getProduits());
@@ -24,6 +24,16 @@ public class AppController {
         // Récupérer l'utilisateur connecté depuis la session
        loggedUser = (Utilisateur) session.getAttribute("loggedUser");
         model.addAttribute("loggedUser", loggedUser);
+
+        return "list2";
+    }
+
+
+    @GetMapping("list")
+    public String showlist(Model model) {
+
+        model.addAttribute("produits", produitManager.getProduits());
+
 
         return "list";
     }

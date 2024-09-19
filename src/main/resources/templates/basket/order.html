@@ -7,6 +7,27 @@
 <div layout:fragment="content">
     <body>
     <h1>Commandes</h1>
+
+    <!-- Formulaire de filtre pour les états -->
+    <form th:action="@{/commandes}" method="get">
+        <label>
+            <input type="checkbox" name="etatIds" value="1"
+                   th:checked="${etatIds != null and #lists.contains(etatIds, 1)}"> Panier
+        </label>
+        <label>
+            <input type="checkbox" name="etatIds" value="2"
+                   th:checked="${etatIds != null and #lists.contains(etatIds, 2)}"> En préparation
+        </label>
+        <label>
+            <input type="checkbox" name="etatIds" value="3"
+                   th:checked="${etatIds != null and #lists.contains(etatIds, 3)}"> En livraison
+        </label>
+        <label>
+            <input type="checkbox" name="etatIds" value="4"
+                   th:checked="${etatIds != null and #lists.contains(etatIds, 4)}"> Commande terminée
+        </label>
+        <button type="submit">Filtrer</button>
+    </form>
     <table>
         <thead>
         <tr>
@@ -34,7 +55,8 @@
                 <form th:action="@{/updateEtatCommande}" method="post">
                     <input type="hidden" name="commandeId" th:value="${commande.id}">
                     <input type="hidden" name="livraison" th:value="${commande.livraison}">
-                    <button type="submit" th:text="${commande.livraison} ? 'Prête' : 'Livrée'"></button>
+<!--                    <button type="submit" th:text="${commande.livraison} ? 'Prête' : 'Livrée'"></button>-->
+                    <button type="submit" th:text="${commande.etatCommande.id == 2 ? (commande.livraison ? 'Prête' : 'Terminer') : (commande.etatCommande.id == 3 ? 'Livrée' : '---')}"></button>
                 </form>
             </td>
             <td>

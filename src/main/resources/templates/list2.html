@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+
+<title layout:fragment="title">List</title>
+<div layout:fragment="content">
+    <h1>Liste des produits</h1>
+    <p th:if="${success}" th:text="${success}"></p>
+
+    <a th:href="@{/create-produit}"><button class="styled" type="button">Ajouter un produit </button></a>
+
+<!--    <div th:each="produit : ${produits}" class="uk-padding-small">-->
+<!--        <div th:style="'background-image: url(' + @{${produit.image}} + ');'">-->
+<!--            <div>-->
+
+<!--                    <h1 th:text="${produit.nom}"></h1>-->
+<!--                <span th:text="${produit.description}"></span>-->
+<!--                <span th:text="${'prix:'+produit.prix+'€'}"></span>-->
+<!--                <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>-->
+<!--            </div>-->
+<!--            <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button  type="button">Modifier </button></a>-->
+<!--            <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}"><button  type="button">Supprimer</button></a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <ul>
+        <li th:each="produit : ${produits}"   class="uk-padding-small">
+            <div th:style="'background-image: url(' + @{${produit.image}} + ');'">
+            <span th:text="${produit.nom}"></span> - <span th:text="${produit.prix}"></span> €
+            <form th:action="@{/ajouterProduit}" method="post">
+                <h1 th:text="${produit.nom}"></h1>
+                <span th:text="${produit.description}"></span>
+                <span th:text="${'prix:'+produit.prix+'€'}"></span>
+                <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>
+                <input type="hidden" name="utilisateurId" th:value="${loggedUser.id}"> <!-- Exemple de récupération de l'ID utilisateur -->
+                <input type="hidden" name="produitId" th:value="${produit.id}">
+                <input type="hidden" name="prix" th:value="${produit.prix}">
+                <input type="number" name="quantite" value="1" min="1">
+                <input type="hidden" name="livraison" value="false"> <!-- Exemple de valeur par défaut -->
+                <a th:href="@{/create-produit/{id}(id=${produit.id})}"><button  type="button">Modifier </button></a>
+                <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}"><button  type="button">Supprimer</button></a>
+                <button type="submit">Ajouter au panier</button>
+            </form>
+            </div>
+        </li>
+    </ul>
+</div>
+</html>

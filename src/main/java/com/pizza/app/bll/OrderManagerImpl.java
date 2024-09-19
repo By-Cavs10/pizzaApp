@@ -9,5 +9,7 @@ import java.util.List;
 public interface OrderManagerImpl {
     List<Commande> getAllCommandes();
     void updateEtatCommande(Long commandeId,Boolean livraison);
+
+    List<Commande> getCommandesByEtatIds(List<Long> etatIds);
 }
 
