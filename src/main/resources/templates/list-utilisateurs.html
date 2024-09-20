@@ -1,54 +1,118 @@
+
+
+
+
+
 <!DOCTYPE html>
-<html layout:decorate="~{layout/base}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
->
+<html layout:decorate="~{layout/base}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <title layout:fragment="title">Liste des Utilisateurs</title>
-    <link rel="stylesheet" th:href="@{/css/user-theme.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/user-theme.css}">-->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-<div layout:fragment="content" class="container">
+<div layout:fragment="content" class="container mx-auto p-4">
 
+    <h1 class="text-2xl font-bold mb-4">Liste des Utilisateurs</h1>
 
-    <h1>Liste des Utilisateurs</h1>
-
-    <table>
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Rue</th>
-            <th>Code Postal</th>
-            <th>Ville</th>
-            <th>Employé</th>
-            <th>Actions</th>
+        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Nom</th>
+            <th class="py-3 px-6 text-left">Prénom</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-left">Rue</th>
+            <th class="py-3 px-6 text-left">Code Postal</th>
+            <th class="py-3 px-6 text-left">Ville</th>
+            <th class="py-3 px-6 text-left">Employé</th>
+            <th class="py-3 px-6 text-left">Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="utilisateur : ${utilisateurs}">
-            <td th:text="${utilisateur.id}"></td>
-            <td th:text="${utilisateur.nom}"></td>
-            <td th:text="${utilisateur.prenom}"></td>
-            <td th:text="${utilisateur.email}"></td>
-            <td th:text="${utilisateur.rue}"></td>
-            <td th:text="${utilisateur.codePostal}"></td>
-            <td th:text="${utilisateur.ville}"></td>
-            <td th:text="${utilisateur.employe ? 'Oui' : 'Non'}"></td>
-            <td>
-                <div class="action-buttons">
-                    <a th:href="@{/utilisateurs/edit/{id}(id=${utilisateur.id})}" class="btn btn-edit" >Modifier</a> |
-                    <a th:href="@{/utilisateurs/delete/{id}(id=${utilisateur.id})}" class="btn btn-delete"
-                       onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+        <tbody class="text-gray-600 text-sm font-light">
+        <tr th:each="utilisateur : ${utilisateurs}" class="border-b border-gray-200 hover:bg-gray-100">
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.id}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.nom}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.prenom}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.email}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.rue}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.codePostal}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.ville}"></td>
+            <td class="py-3 px-6 text-left" th:text="${utilisateur.employe ? 'Oui' : 'Non'}"></td>
+            <td class="py-3 px-6">
+                <div class="flex items-center space-x-2">
+                    <a th:href="@{/utilisateurs/edit/{id}(id=${utilisateur.id})}" class="text-blue-500 hover:text-blue-700">Modifier</a>
+                    <span>|</span>
+                    <a th:href="@{/utilisateurs/delete/{id}(id=${utilisateur.id})}" class="text-red-500 hover:text-red-700" onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
 
-
 </div>
 </body>
+
 </html>
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html layout:decorate="~{layout/base}"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--&gt;-->
+
+<!--<head>-->
+<!--    <title layout:fragment="title">Liste des Utilisateurs</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/user-theme.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div layout:fragment="content" class="container">-->
+
+
+<!--    <h1>Liste des Utilisateurs</h1>-->
+
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>Nom</th>-->
+<!--            <th>Prénom</th>-->
+<!--            <th>Email</th>-->
+<!--            <th>Rue</th>-->
+<!--            <th>Code Postal</th>-->
+<!--            <th>Ville</th>-->
+<!--            <th>Employé</th>-->
+<!--            <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="utilisateur : ${utilisateurs}">-->
+<!--            <td th:text="${utilisateur.id}"></td>-->
+<!--            <td th:text="${utilisateur.nom}"></td>-->
+<!--            <td th:text="${utilisateur.prenom}"></td>-->
+<!--            <td th:text="${utilisateur.email}"></td>-->
+<!--            <td th:text="${utilisateur.rue}"></td>-->
+<!--            <td th:text="${utilisateur.codePostal}"></td>-->
+<!--            <td th:text="${utilisateur.ville}"></td>-->
+<!--            <td th:text="${utilisateur.employe ? 'Oui' : 'Non'}"></td>-->
+<!--            <td>-->
+<!--                <div class="action-buttons">-->
+<!--                    <a th:href="@{/utilisateurs/edit/{id}(id=${utilisateur.id})}" class="btn btn-edit" >Modifier</a> |-->
+<!--                    <a th:href="@{/utilisateurs/delete/{id}(id=${utilisateur.id})}" class="btn btn-delete"-->
+<!--                       onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>-->
+<!--                </div>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
