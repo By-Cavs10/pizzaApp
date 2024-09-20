@@ -1,0 +1,12 @@
+.imageList {
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+body {
+    background-image: url('https://images7.alphacoders.com/370/370795.jpg'); /* Remplacez par l'URL de votre image */
+    background-size: cover; /* Pour couvrir tout l'écran */
+    background-position: center; /* Pour centrer l'image */
+    background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
+    color: #fff; /* Couleur de texte par défaut, à ajuster selon vos besoins */
+}

@@ -6,33 +6,50 @@
 
 <title layout:fragment="title">List</title>
 <div layout:fragment="content">
-    <h1>Liste des produits</h1>
-    <p th:if="${success}" th:text="${success}"></p>
+    <h1 class="text-3xl font-bold text-center text-red-600 mb-6">Liste des Produits</h1>
 
-    <a th:href="@{/create-produit}">
-        <button class="styled" type="button">Ajouter un produit</button>
-    </a>
+    <!-- Message de succès -->
+    <p th:if="${success}" th:text="${success}" class="text-green-500 text-center mb-4"></p>
 
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" th:each="produit : ${produits}">
+    <!-- Bouton pour ajouter un produit -->
+    <div class="flex justify-center mb-6">
+        <a th:href="@{/create-produit}">
+            <button class="px-4 py-2 font-semibold text-white bg-red-600 rounded-md shadow hover:bg-red-700 focus:outline-none">
+                Ajouter un produit
+            </button>
+        </a>
+    </div>
 
-            <div class="h-auto max-w-full rounded-lg" th:style="'background-image: url(' + @{${produit.image}} + ');'">
-                <div>
+    <!-- Liste des produits -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition" th:each="produit : ${produits}">
+            <!-- Image du produit avec effet parallax -->
+            <div class="h-40 bg-cover bg-center rounded-t-lg" th:style="'background-image: url(' + @{${produit.image}} + ');'"></div>
 
-                    <h1 th:text="${produit.nom}"></h1>
-                    <span th:text="${produit.description}"></span>
-                    <span th:text="${'prix:'+produit.prix+'€'}"></span>
-                    <span th:text="${'Type:'+produit.typeProduit.libelle}"></span>
-                </div>
-                <a th:href="@{/create-produit/{id}(id=${produit.id})}">
-                    <button type="button">Modifier</button>
+            <!-- Détails du produit -->
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800" th:text="${produit.nom}"></h2>
+                <p class="text-sm text-gray-600 mb-2" th:text="${produit.description}"></p>
+                <p class="text-lg font-bold text-red-500" th:text="${'Prix: ' + produit.prix + '€'}"></p>
+                <p class="text-sm text-gray-500" th:text="${'Type: ' + produit.typeProduit.libelle}"></p>
+            </div>
+
+            <!-- Boutons d'actions -->
+            <div class="flex justify-between px-4 py-2 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+                <a th:href="@{/create-produit/{id}(id=${produit.id})}" class="text-sm text-blue-500 hover:text-blue-700">
+                    <button class="px-2 py-1 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
+                        Modifier
+                    </button>
                 </a>
-                <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}">
-                    <button type="button">Supprimer</button>
+                <a th:href="@{/supprimer-produits/{id}(id=${produit.id})}" class="text-sm text-red-500 hover:text-red-700">
+                    <button class="px-2 py-1 font-medium text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none">
+                        Supprimer
+                    </button>
                 </a>
             </div>
         </div>
     </div>
+
     <!--    <ul>-->
     <!--        <li th:each="produit : ${produits}"   class="uk-padding-small">-->
     <!--            <div th:style="'background-image: url(' + @{${produit.image}} + ');'">-->

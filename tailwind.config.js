@@ -5,7 +5,11 @@ module.exports = {
   "./src/main/resources/templates/**/*.html",
     "./src/main/resources/static/**/*.js",],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Pacifico', 'sans-serif'],
+    },
+  },
   },
   plugins: [
     require('@tailwindcss/forms'),
