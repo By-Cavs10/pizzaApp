@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@SessionAttributes("loggedUser")
 @Controller
 public class AddProduitController {
 
