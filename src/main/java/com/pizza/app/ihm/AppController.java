@@ -37,5 +37,9 @@ public class AppController {
 
         return "list";
     }
+    @GetMapping("histoire")
+    public String showhistoire(Model model) {
+        return "histoire";
+    }
 
 }
