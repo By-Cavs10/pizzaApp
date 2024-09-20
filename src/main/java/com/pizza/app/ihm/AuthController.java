@@ -31,20 +31,21 @@ public class AuthController {
     public String login(Model model, RedirectAttributes redirectAttributes) {
 
 
-        // Instancier un User vide (email et password vide)
-       // Utilisateur user = new Utilisateur();
-
-        // Envoyer le user dans le Model
-       // model.addAttribute("user", user);
+//         Instancier un User vide (email et password vide)
+         Utilisateur user = new Utilisateur();
+//
+//         Envoyer le user dans le Model
+         model.addAttribute("user", user);
 
         return "auth/login";
     }
 
-    @GetMapping("/proccesLogin")
-    public String processLogin( Model model,Principal principal, RedirectAttributes redirectAttributes, HttpSession session) {
-//        // Authentification (contrôle métier)
-//        AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
-//
+    @PostMapping("login")
+    public String processLogin(@ModelAttribute(name = "user") Utilisateur user, Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult, HttpSession session) {
+        // 1 :: Contrôle de surface
+
+        // Erreur : Si controle de surface pas ok
+//        if (bindingResult.hasErrors()) {
 //        // Si erreur d'authentification, retourner la page de login avec un message d'erreur
 //        if (response.getCode().equals("756")) {
 //            // Ajouter le message d'erreur dans le modèle (si tu veux l'afficher)
@@ -52,16 +53,31 @@ public class AuthController {
 //            return "auth/login";
 //        }
 
-        // Si l'authentification réussit, mettre l'utilisateur en session
-        Utilisateur loggedUser = authManager.getUtilisateurByEmail(principal.getName());
-        session.setAttribute("loggedUser", loggedUser);
+            // 2 : Contrôle métier (le manager)
+            AppManagerResponse<Utilisateur> response = authManager.authenticate(user.getEmail(), user.getPassword());
 
-        // Ajouter un message de succès en flash
-        IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+            // Erreur code 756 retourner la page avec l'erreur métier
+            if (response.getCode().equals("756")) {
+                // TODO : Pendant qu'on retourne la page de connexion (envoyer l'erreur metier)
+                return "auth/login";
+            }
 
-        // Rediriger vers la page d'accueil ou la page compte
-        return "redirect:/compte";
-    }
+
+            // 3 : Connecter l'user en session
+            // Mettre l'user retrouvé en base dans la session
+            model.addAttribute("loggedUser", response.getData());
+
+            Utilisateur loggedUser = authManager.authenticate(user.getEmail(), user.getPassword()).getData();
+            if (loggedUser != null) {
+                session.setAttribute("loggedUser", loggedUser);
+                // Ajouter un message temporaire (flash message)
+                IHMHelpers.sendSuccessFlashMessage(redirectAttributes, "Vous êtes connecté(e) avec succès");
+                return "redirect:/compte";
+            }
+            // rediriger sur ta page d'accueil
+            return "redirect:/login";
+        }
+
 
 
     @GetMapping("register")
@@ -81,7 +97,6 @@ public class AuthController {
         // 1 :: Contrôle de surface (validation du formulaire)
 
         if (bindingResult.hasErrors()) {
-
 
 
             return "auth/register";
