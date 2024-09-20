@@ -10,3 +10,8 @@ body {
     background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
     color: #fff; /* Couleur de texte par défaut, à ajuster selon vos besoins */
 }
+
+footer{
+
+    color: black;
+}

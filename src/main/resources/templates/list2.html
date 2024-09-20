@@ -21,32 +21,33 @@
     </div>
 
     <!-- Liste des produits -->
-    <ul class="space-y-6">
-        <li th:each="produit : ${produits}" class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-            <!-- Image du produit -->
-            <div class="h-40 bg-cover bg-center" th:style="'background-image: url(' + @{${produit.image}} + ');'"></div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition" th:each="produit : ${produits}">
+            <!-- Image du produit avec effet parallax -->
+            <div class="h-40 bg-cover bg-center rounded-t-lg" th:style="'background-image: url(' + @{${produit.image}} + ');'"></div>
 
             <!-- Détails du produit -->
             <div class="p-4">
                 <h2 class="text-xl font-semibold text-gray-800" th:text="${produit.nom}"></h2>
                 <p class="text-sm text-gray-600 mb-2" th:text="${produit.description}"></p>
                 <p class="text-lg font-bold text-red-500" th:text="${'Prix: ' + produit.prix + '€'}"></p>
-                <p class="text-sm text-gray-500" th:text="${'Type: ' + produit.typeProduit.libelle}"></p>
+                <p class="text-sm text-gray-500 mb-4" th:text="${'Type: ' + produit.typeProduit.libelle}"></p>
             </div>
 
             <!-- Formulaire d'ajout au panier -->
-            <form th:action="@{/ajouterProduit}" method="post" class="flex flex-col gap-4 p-4">
+            <form th:action="@{/ajouterProduit}" method="post" class="flex flex-col gap-4 p-4 bg-gray-50 rounded-b-lg">
                 <input type="hidden" name="utilisateurId" th:value="${loggedUser.id}">
                 <input type="hidden" name="produitId" th:value="${produit.id}">
                 <input type="hidden" name="prix" th:value="${produit.prix}">
                 <input type="hidden" name="livraison" value="false">
 
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 mb-4">
                     <label for="quantite" class="text-sm text-gray-700">Quantité :</label>
-                    <input type="number" name="quantite" value="1" min="1" class="w-20 px-2 py-1 border rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none">
+                    <input type="number" name="quantite" value="1" min="1" class="w-16 px-2 py-1 border rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none bg-white text-gray-800">
                 </div>
 
-                <div class="flex justify-between">
+                <!-- Boutons d'actions -->
+                <div class="flex justify-between px-4 py-2 border-t border-gray-200 bg-gray-50 rounded-b-lg">
                     <a th:href="@{/create-produit/{id}(id=${produit.id})}" class="text-sm text-blue-500 hover:text-blue-700">
                         <button type="button" class="px-2 py-1 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
                             Modifier
@@ -62,8 +63,10 @@
                     </button>
                 </div>
             </form>
-        </li>
-    </ul>
+        </div>
+    </div>
+
+
 
 </div>
 </html>
