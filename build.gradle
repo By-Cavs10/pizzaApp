@@ -33,6 +33,12 @@ dependencies {
 
 	//JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
+	// Starter Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	testImplementation 'org.springframework.security:spring-security-test'
+
 }
 
 tasks.named('test') {
